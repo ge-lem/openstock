@@ -7,8 +7,8 @@ const ApiService = {
   init() {
     axios.defaults.baseURL = import.meta.env.VITE_APP_API_URL;
     //axios.defaults.withCredentials = true;
-    //axios.defaults.xsrfHeaderName = "X-CSRFToken";
-    //axios.defaults.xsrfCookieName = "csrftoken";
+    axios.defaults.xsrfHeaderName = "X-CSRFToken";
+    axios.defaults.xsrfCookieName = "csrftoken";
   },
 
   setToken(token) {

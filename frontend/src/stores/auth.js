@@ -69,7 +69,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function inviteUser(email) {
-    const { data } = await ApiService.query("invitation/send", { email });
+    const { data } = await ApiService.post("invitation/send", { email });
     return data;
   }
   async function registerUser(params) {
@@ -78,6 +78,13 @@ export const useAuthStore = defineStore("auth", () => {
   }
   async function activateUser(params) {
     const { data } = await ApiService.post("auth/users/activation", params);
+    return data;
+  }
+  async function resendActivate(params) {
+    const { data } = await ApiService.post(
+      "auth/users/resend_activation",
+      params
+    );
     return data;
   }
 
@@ -96,5 +103,6 @@ export const useAuthStore = defineStore("auth", () => {
     inviteUser,
     registerUser,
     activateUser,
+    resendActivate,
   };
 });

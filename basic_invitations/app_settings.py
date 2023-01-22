@@ -25,7 +25,7 @@ class AppSettings:
         """
         URL sent in the invitation email
         """
-        return self._setting("EMAIL_URL", "/invitation")
+        return self._setting("EMAIL_URL", "/register")
 
     @property
     def INVITATION_LIMIT(self):

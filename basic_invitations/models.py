@@ -7,8 +7,11 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from django.utils import timezone
 from django.utils.crypto import get_random_string
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
 
 from .app_settings import app_settings
+import sys
 
 class Invitation(models.Model):
     accepted = models.BooleanField(default=False)
@@ -21,7 +24,6 @@ class Invitation(models.Model):
         on_delete=models.CASCADE,
     )
     email = models.EmailField(
-        unique=True,
         max_length=app_settings.EMAIL_MAX_LENGTH,
     )
     created = models.DateTimeField(default=timezone.now)
@@ -43,6 +45,7 @@ class Invitation(models.Model):
     def send_invitation(self, request, **kwargs):
         current_site = get_current_site(request)
         invite_url = request.build_absolute_uri(app_settings.EMAIL_URL)
+        invite_url = invite_url + f"?key={self.key}"
         ctx = kwargs
         ctx.update(
             {
@@ -54,7 +57,7 @@ class Invitation(models.Model):
             },
         )
         try:
-            email_template = "invitations/email/email_invite"
+            email_template = "email/email_invite"
 
             subject = render_to_string(f"{email_template}_subject.txt", ctx)
             # remove superfluous line breaks

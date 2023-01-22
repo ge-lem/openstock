@@ -1,0 +1,44 @@
+# Local pour l'app d'invitation basique.
+# Copyright (C) 2023 Germain Lemasson
+# This file is distributed under the same license as the basic_invitation package.
+# germain lemasson <germain.lemason@gmail.com>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: basic_invitation\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-22 19:44+0000\n"
+"PO-Revision-Date: 2023-01-22 22:50+0200\n"
+"Last-Translator:  germain lemasson <germain.lemason@gmail.com>\n"
+"Language-Team: French\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+#: basic_invitations/templates/email/email_invite_message.txt:3
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Hello,\n"
+"\n"
+"You (%(email)s) have been invited to join %(site_name)s\n"
+"\n"
+"If you'd like to join, please go to %(invite_url)s\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Bonjour,\n"
+"\n"
+"Vous (%(email)s) avez été invité à rejoindre %(site_name)s\n"
+"\n"
+"Si vous acceptez l'invitation, cliquez sur %(invite_url)s\n"
+"\n"
+
+#: basic_invitations/templates/email/email_invite_subject.txt:3
+#, python-format
+msgid "Invitation to join %(site_name)s"
+msgstr "Invitation pour rejoindre %(site_name)s"

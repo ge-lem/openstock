@@ -4,7 +4,8 @@ __pycache__/
 *.swp
 nginx/certs
 dist
-static
+*.mo
+staticfiles
 *.sqlite3
 node_modules
 venv
