@@ -22,7 +22,7 @@ const ApiService = {
   },
 
   async get(resource, slug = "") {
-    return axios.get(`${resource}/${slug}`);
+    return axios.get(resource + "/" + (slug == "" ? "" : slug + "/"));
   },
 
   async post(resource, params) {

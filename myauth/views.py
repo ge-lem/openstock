@@ -64,6 +64,6 @@ class UserList(generics.ListCreateAPIView):
             searchQ = (Q(username__icontains=search) | 
                     Q(first_name__icontains=search) | 
                     Q(last_name__icontains=search))
-            users = users.filter(searchQ).distinct()
+            users = User.objects.filter(searchQ).distinct()
         return users
 

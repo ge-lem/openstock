@@ -46,7 +46,7 @@ class IsAdminOrIsOwner(permissions.BasePermission):
     The object field must be 'user'
     """
     def has_object_permission(self, request, view, obj):
-        ismanager = request.user in obj.owner.managers.all()
+        ismanager = (request.user == obj.owner.owner) or (request.user in obj.owner.managers.all())
         return request.user.is_staff or ismanager
 
 
@@ -99,10 +99,10 @@ class PostViewSet(mixins.ListModelMixin,
         return posts
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'retrieve', 'list']:
-            permission_classes = [IsAdminOrIsOwner, IsAuthenticated]
-        else:
+        if self.action in ['destroy']:
             permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [IsAdminOrIsOwner, IsAuthenticated]
         return [permission() for permission in permission_classes]
 
     def update(self, request, *args, **kwargs):

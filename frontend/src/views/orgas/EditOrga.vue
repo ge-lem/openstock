@@ -62,7 +62,7 @@
             </div>
             <div>
               <label class="form-label">Manageurs</label
-              ><UserDynList v-model="orga.managers" ressource="users">
+              ><UserDynList v-model="orga.managers">
               </UserDynList>
             </div>
           </form>
