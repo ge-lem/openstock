@@ -155,6 +155,7 @@ DJOSER = {
         },
     'PERMISSIONS': {
         'user_create': ['basic_invitations.permissions.IsInvited'],
+        'user': ['basic_organizations.permissions.IsCoworker'],
         'username_reset': ['rest_framework.permissions.IsAdmin'],
         'username_reset_confirm': ['rest_framework.permissions.IsAdmin'],
     }
