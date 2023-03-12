@@ -49,6 +49,16 @@ class IsAdminOrIsOwner(permissions.BasePermission):
         ismanager = (request.user == obj.owner.owner) or (request.user in obj.owner.managers.all())
         return request.user.is_staff or ismanager
 
+class IsOwnerOrOpen(permissions.BasePermission):
+    """
+    Permission checking if user is admin or if the object belongs
+    to the current user.
+    The object field must be 'user'
+    """
+    def has_object_permission(self, request, view, obj):
+        ismanager = (request.user == obj.owner.owner) or (request.user in obj.owner.managers.all())
+        return request.user.is_staff or ismanager or obj.status == Post.OPEN
+
 
 
 
@@ -96,11 +106,15 @@ class PostViewSet(mixins.ListModelMixin,
                 posts = posts.filter(status=status)
             if tags is not None:
                 posts = posts.filter(tags__name__in=tags.split(","))
+        elif (self.action == 'retrieve'):
+            posts = Post.objects.all()
         return posts
 
     def get_permissions(self):
         if self.action in ['destroy']:
             permission_classes = [IsAdminUser]
+        elif self.action == 'retrieve':
+            permission_classes = [IsAuthenticated, IsOwnerOrOpen]
         else:
             permission_classes = [IsAdminOrIsOwner, IsAuthenticated]
         return [permission() for permission in permission_classes]

@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
@@ -148,8 +148,8 @@ async function newPost(orga) {
   router.push({ name: "editpost", params: { postid: newpost.id } });
 }
 
-onBeforeMount(async () => {
-  if (isAuthenticated.value) {
+async function refreshAuth(){
+if (isAuthenticated.value) {
     const orgaImp = await import("@/stores/orgas");
     orgaStore = orgaImp.useOrgaStore();
     const postImp = await import("@/stores/posts");
@@ -163,5 +163,15 @@ onBeforeMount(async () => {
   } else {
     console.log("not imported");
   }
+}
+
+watch(isAuthenticated,async ()=>{
+    console.log("auth watch");
+  refreshAuth();
+
+})
+
+onBeforeMount(async () => {
+  refreshAuth();
 });
 </script>

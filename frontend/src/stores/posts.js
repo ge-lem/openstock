@@ -19,6 +19,16 @@ export const usePostStore = defineStore("posts", () => {
     totalCount.value = data.count;
     return { posts, totalCount };
   }
+  async function showPost(id) {
+    let localpost =
+      post.value.id == id ? post.value : posts.value.find((p) => p.id == id);
+    if (localpost) {
+      return localpost;
+    } else {
+      const { data } = await ApiService.get("posts/search", id);
+      return data;
+    }
+  }
   async function getPost(id) {
     let localpost =
       post.value.id == id ? post.value : posts.value.find((p) => p.id == id);
@@ -71,6 +81,7 @@ export const usePostStore = defineStore("posts", () => {
     searchPosts,
     getPost,
     getNewPost,
+    showPost,
     updatePost,
     deletePost,
     updateThumbnail,

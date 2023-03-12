@@ -37,7 +37,7 @@ class OrganizationPermission(permissions.BasePermission):
             return False
         if request.user.is_staff:
             return True
-        isowner == False
+        isowner = False
         ismanager = False
         if isinstance(obj, Organization):
             isowner = request.user == obj.owner
