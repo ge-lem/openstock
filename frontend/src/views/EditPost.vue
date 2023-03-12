@@ -92,7 +92,7 @@
                     type="button"
                     disabled
                   >
-                    Chargement {{ thumbProgress }}%
+                    Chargement {{ thumbProgress }}
                   </button>
                 </div>
               </div>
@@ -167,7 +167,7 @@
                     type="button"
                     disabled
                   >
-                    Chargement {{ photoProgress }}%
+                    Chargement {{ photoProgress }}
                   </button>
                 </div>
                 <table class="table">
@@ -326,7 +326,8 @@ const thumbnail = ref();
 const thumbF = ref(null);
 const thumbProgress = ref(null);
 function thumbOnProgressCB(percent) {
-  thumbProgress.value = percent;
+  if(percent==100) thumbProgress.value="compression image"
+  else thumbProgress.value = percent;
 }
 
 function changeThumbnail() {
@@ -362,7 +363,8 @@ const addphotoinput = ref();
 const photoF = ref(null);
 const photoProgress = ref(null);
 function photoOnProgressCB(percent) {
-  photoProgress.value = percent;
+  if(percent==100) photoProgress.value="compression image"
+  else photoProgress.value = percent;
 }
 function changePhoto() {
   if (checkImageName(addphotoinput.value.files[0]))
