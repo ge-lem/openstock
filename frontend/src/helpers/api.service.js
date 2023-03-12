@@ -28,11 +28,21 @@ const ApiService = {
   async post(resource, params) {
     return axios.post(resource + "/", params);
   },
-  async postFile(resource, file) {
+  async postFile(resource, file, onProgressCB) {
+    const config = !onProgressCB
+      ? { headers: { "Content-Type": "multipart/form-data" } }
+      : {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (progressEvent) {
+            onProgressCB(
+              Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            );
+          },
+        };
+
     const formData = new FormData();
     formData.append("file", file);
-    const headers = { "Content-Type": "multipart/form-data" };
-    return axios.post(resource + "/", formData, { headers });
+    return axios.post(resource + "/", formData, config);
   },
 
   async update(resource, slug, params) {

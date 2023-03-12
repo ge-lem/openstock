@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.db.models import Q
+from django.db.utils import IntegrityError
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.exceptions import ValidationError
 from .models import Organization
 from .serializers import OrganizationSerializer
 
@@ -77,4 +79,7 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         return orgas
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        try:
+            serializer.save(owner=self.request.user)
+        except IntegrityError:
+            raise ValidationError({'name': ['Ce nom est déjà utilisé']})

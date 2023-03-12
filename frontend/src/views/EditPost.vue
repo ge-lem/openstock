@@ -78,12 +78,21 @@
                     @change="changeThumbnail"
                   />
                   <button
+                    v-if="thumbProgress == null"
                     class="btn btn-primary"
                     type="button"
                     :disabled="!thumbF"
                     @click="uploadThumbnail"
                   >
                     Upload
+                  </button>
+                  <button
+                    v-else="thumbProgress != null"
+                    class="btn btn-secondary"
+                    type="button"
+                    disabled
+                  >
+                    Chargement {{ thumbProgress }}%
                   </button>
                 </div>
               </div>
@@ -144,12 +153,21 @@
                     @change="changePhoto"
                   />
                   <button
+                    v-if="photoProgress == null"
                     class="btn btn-primary"
                     type="button"
                     :disabled="!photoF"
                     @click="uploadPhoto"
                   >
                     Ajouter
+                  </button>
+                  <button
+                    v-else="photoProgress != null"
+                    class="btn btn-secondary"
+                    type="button"
+                    disabled
+                  >
+                    Chargement {{ photoProgress }}%
                   </button>
                 </div>
                 <table class="table">
@@ -163,7 +181,7 @@
                     <tr v-for="img in post.photos" :key="img">
                       <td>
                         <img
-                          :src="'media/' + img"
+                          :src="'/media/' + img"
                           class="img-thumbnail img-fluid col-3"
                           :alt="img"
                         />
@@ -241,7 +259,7 @@
   </div>
 </template>
 <script setup>
-import { onBeforeMount, ref, computed } from "vue";
+import { onBeforeMount, ref, computed, inject } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
 
@@ -250,6 +268,8 @@ import { useOrgaStore } from "@/stores/orgas";
 import { usePostStore } from "@/stores/posts";
 import Multiselect from "@vueform/multiselect";
 import Markdown from "@/components/ui/MarkdownComponent.vue";
+
+const showMessage = inject("show");
 
 const showHelp = ref(false);
 
@@ -281,31 +301,94 @@ const statusDict = ref({
 const tags = ref([]);
 
 const editForm = ref();
+
+function checkImageName(file) {
+  if (file) {
+    const filename = file.name.toLowerCase();
+    if (
+      [".png", ".jpg", ".jpeg", ".tiff", ".bmp"].some((char) =>
+        filename.endsWith(char)
+      )
+    )
+      return true;
+    else {
+      showMessage({
+        content:
+          "Seules les images ('.png', '.jpg', '.jpeg', '.tiff', '.bmp') sont acceptées",
+      });
+    }
+  } else {
+    return true;
+  }
+}
+
 const thumbnail = ref();
 const thumbF = ref(null);
+const thumbProgress = ref(null);
+function thumbOnProgressCB(percent) {
+  thumbProgress.value = percent;
+}
+
 function changeThumbnail() {
-  thumbF.value = thumbnail.value.files[0];
+  if (checkImageName(thumbnail.value.files[0])) {
+    thumbF.value = thumbnail.value.files[0];
+  }
 }
 async function uploadThumbnail() {
   if (thumbF.value) {
-    const url = await postStore.updateThumbnail(post.value.id, thumbF.value);
-    post.value.thumbnail = url;
-    thumbnail.value.value = null;
-    thumbF.value = null;
+    try {
+      const url = await postStore.updateThumbnail(
+        post.value.id,
+        thumbF.value,
+        thumbOnProgressCB
+      );
+      post.value.thumbnail = url;
+      thumbnail.value.value = null;
+      thumbF.value = null;
+      thumbProgress.value = null;
+    } catch (error) {
+      thumbnail.value.value = null;
+      thumbF.value = null;
+      if (error.response && error.response.status == 400) {
+        showMessage({
+          content: "Le fichier image n'est pas valide",
+        });
+      }
+    }
   }
 }
 
 const addphotoinput = ref();
 const photoF = ref(null);
+const photoProgress = ref(null);
+function photoOnProgressCB(percent) {
+  photoProgress.value = percent;
+}
 function changePhoto() {
-  photoF.value = addphotoinput.value.files[0];
+  if (checkImageName(addphotoinput.value.files[0]))
+    photoF.value = addphotoinput.value.files[0];
 }
 async function uploadPhoto() {
   if (photoF.value) {
-    const url = await postStore.addPhoto(post.value.id, photoF.value);
-    post.value.photos.push(url);
-    addphotoinput.value.value = null;
-    photoF.value = null;
+    try {
+      const url = await postStore.addPhoto(
+        post.value.id,
+        photoF.value,
+        photoOnProgressCB
+      );
+      post.value.photos.push(url);
+      addphotoinput.value.value = null;
+      photoF.value = null;
+      photoProgress.value = null;
+    } catch (error) {
+      addphotoinput.value.value = null;
+      photoF.value = null;
+      if (error.response && error.response.status == 400) {
+        showMessage({
+          content: "Le fichier image n'est pas valide",
+        });
+      }
+    }
   }
 }
 

@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import UniqueConstraint
+from django.db.models.functions import Lower
 from django.contrib.auth import get_user_model
 
 
@@ -24,4 +26,11 @@ class Organization(models.Model):
     isIndividual = models.BooleanField(default=False)
     def __str__(self):
         return self.name
-
+    
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                Lower('name'),
+                name='name_unique',
+            ),
+        ]

@@ -15,29 +15,43 @@ from rest_framework.parsers import (MultiPartParser,
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 
 from taggit.models import Tag
 
 from basic_organizations.models import Organization
 from posts.models import Post, PhotoPost
-from posts.serializers import PostSerializer 
+from posts.serializers import PostSerializer
 
 # Create your views here.
+
+
 def compress_image(photo):
     # start compressing image
-    image_temporary = Image.open(photo)
-    output_io_stream = BytesIO()
-    image_temporary.thumbnail((1250, 1250), Image.ANTIALIAS)
+    if (photo.name.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp'))):
+        try:
+            image_temporary = Image.open(photo)
+            image_temporary.verify()
 
-    # saving output
-    image_temporary.save(output_io_stream, format='JPEG', quality=75,
-                         optimize=True, progressive=True)
-    output_io_stream.seek(0)
-    photo = InMemoryUploadedFile(output_io_stream, 'ImageField',
-                                 "%s.jpg" % photo.name.split('.')[0],
-                                 'image/jpeg', sys.getsizeof(output_io_stream),
-                                 None)
-    return photo
+            image_temporary = Image.open(photo)
+            output_io_stream = BytesIO()
+            image_temporary.thumbnail((1250, 1250), Image.ANTIALIAS)
+
+            # saving output
+            image_temporary.save(output_io_stream, format='JPEG', quality=75,
+                                 optimize=True, progressive=True)
+            output_io_stream.seek(0)
+            photo = InMemoryUploadedFile(output_io_stream, 'ImageField',
+                                         "%s.jpg" % photo.name.split('.')[0],
+                                         'image/jpeg', sys.getsizeof(
+                                             output_io_stream),
+                                         None)
+            return photo
+        except BaseException as err:
+            raise ValidationError("Wrong Image format", code=422)
+    else:
+        raise ValidationError("Wrong Image format", code=422)
+
 
 class IsAdminOrIsOwner(permissions.BasePermission):
     """
@@ -45,9 +59,13 @@ class IsAdminOrIsOwner(permissions.BasePermission):
     to the current user.
     The object field must be 'user'
     """
+
     def has_object_permission(self, request, view, obj):
-        ismanager = (request.user == obj.owner.owner) or (request.user in obj.owner.managers.all())
+        ismanager = (
+            request.user == obj.owner.owner) or (
+            request.user in obj.owner.managers.all())
         return request.user.is_staff or ismanager
+
 
 class IsOwnerOrOpen(permissions.BasePermission):
     """
@@ -55,11 +73,12 @@ class IsOwnerOrOpen(permissions.BasePermission):
     to the current user.
     The object field must be 'user'
     """
+
     def has_object_permission(self, request, view, obj):
-        ismanager = (request.user == obj.owner.owner) or (request.user in obj.owner.managers.all())
+        ismanager = (
+            request.user == obj.owner.owner) or (
+            request.user in obj.owner.managers.all())
         return request.user.is_staff or ismanager or obj.status == Post.OPEN
-
-
 
 
 class PostViewSet(mixins.ListModelMixin,
@@ -75,25 +94,25 @@ class PostViewSet(mixins.ListModelMixin,
     parser_classes = (MultiPartParser, FormParser, JSONParser,)
 
     def get_queryset(self):
-        posts = Post.objects.filter(Q(owner__managers__in=[self.request.user])|
-                Q(owner__owner=self.request.user))
-        if(self.action == 'list'):
+        posts = Post.objects.filter(Q(owner__managers__in=[self.request.user]) |
+                                    Q(owner__owner=self.request.user))
+        if (self.action == 'list'):
             search = self.request.query_params.get('search', None)
             tags = self.request.query_params.get('tags', None)
             status = self.request.query_params.get('status', None)
             orgaid = self.request.query_params.get('orga', None)
             order = self.request.query_params.get('order', 'e')
-            
-            if(order == "-c"):
+
+            if (order == "-c"):
                 posts = posts.order_by('create_date')
-            elif(order == "c"):
+            elif (order == "c"):
                 posts = posts.order_by('-create_date')
             else:
                 posts = posts.order_by('expire_date')
 
             if orgaid is not None:
                 try:
-                    orga = Organization.objects.get(pk=orgaid);
+                    orga = Organization.objects.get(pk=orgaid)
                     posts = posts.filter(owner=orga)
                 except Organization.DoesNotExist:
                     posts = posts.none()
@@ -125,17 +144,18 @@ class PostViewSet(mixins.ListModelMixin,
         serializer = self.get_serializer(instance,
                                          data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        #When post closed set expire_date to now
-        if(serializer.validated_data['status'] != instance.status and 
+        # When post closed set expire_date to now
+        if (serializer.validated_data['status'] != instance.status and
                 serializer.validated_data['status'] == Post.CLOSED):
-            serializer.validated_data['expire_date']=timezone.now().date()
-        
-        #When reopen post set expire_date to now + 30 days
-        if(serializer.validated_data['status'] != instance.status and 
+            serializer.validated_data['expire_date'] = timezone.now().date()
+
+        # When reopen post set expire_date to now + 30 days
+        if (serializer.validated_data['status'] != instance.status and
                 serializer.validated_data['status'] == Post.DRAFT and
                 instance.status != Post.OPEN):
-            serializer.validated_data['expire_date']=timezone.now().date()+timedelta(days=30)
-        
+            serializer.validated_data['expire_date'] = timezone.now(
+            ).date() + timedelta(days=30)
+
         self.perform_update(serializer)
 
         if getattr(instance, '_prefetched_objects_cache', None):
@@ -161,6 +181,8 @@ class PostViewSet(mixins.ListModelMixin,
                             status=status.HTTP_200_OK)
         except KeyError:
             raise ParseError('Request has no resource file attached')
+        except ValidationError as error:
+            raise error
 
     @action(methods=['post'], detail=True)
     def add_photo(self, request, pk=None):
@@ -174,6 +196,8 @@ class PostViewSet(mixins.ListModelMixin,
                             status=status.HTTP_200_OK)
         except KeyError:
             raise ParseError('Request has no resource file attached')
+        except ValidationError as error:
+            raise error
 
     @action(methods=['post'], detail=True)
     def delete_photo(self, request, pk=None):
@@ -184,7 +208,7 @@ class PostViewSet(mixins.ListModelMixin,
             if photo:
                 photo.delete()
                 photo.image.delete(save=False)
-                return Response({"photo "+url+" deleted"},
+                return Response({"photo " + url + " deleted"},
                                 status=status.HTTP_200_OK)
         except KeyError:
             raise ParseError('Request has no resource file attached')
@@ -192,26 +216,27 @@ class PostViewSet(mixins.ListModelMixin,
     @action(methods=['get'], detail=False)
     def get_new(self, request):
         orgaid = self.request.query_params.get('orga', None)
-        orgaI = self.request.user.myorganizations.filter(isIndividual=True).get()
+        orgaI = self.request.user.myorganizations.filter(
+            isIndividual=True).get()
         orga = orgaI
         if orgaid is not None:
             try:
-                orga = Organization.objects.filter(Q(managers__in=[self.request.user])|
-                        Q(owner=self.request.user)).get(pk=orgaid);
+                orga = Organization.objects.filter(Q(managers__in=[self.request.user]) | Q(
+                    owner=self.request.user)).get(pk=orgaid)
             except Organization.DoesNotExist:
                 pass
         post = None
         posts = Post.objects.filter(
             status=Post.DRAFT,
             owner=orga).order_by('-id')
-        if(len(posts) != 0):
+        if (len(posts) != 0):
             post = posts[0]
         else:
             post = Post.objects.create(
                 status=Post.DRAFT,
                 owner=orga,
                 title=settings.NEWPOST_TITLE,
-                expire_date=timezone.now().date()+timedelta(days=30),
+                expire_date=timezone.now().date() + timedelta(days=30),
                 update_user=request.user
             )
         return Response(PostSerializer(post).data,
@@ -233,6 +258,7 @@ class PostViewSet(mixins.ListModelMixin,
         return Response([x.name for x in Tag.objects.all()],
                         status=status.HTTP_200_OK)
 
+
 class SearchPostViewSet(mixins.ListModelMixin,
                         mixins.RetrieveModelMixin,
                         viewsets.GenericViewSet):
@@ -240,24 +266,24 @@ class SearchPostViewSet(mixins.ListModelMixin,
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permissions = [IsAuthenticated,]
-    
+
     def get_queryset(self):
         posts = Post.objects.filter(status=Post.OPEN)
         search = self.request.query_params.get('search', None)
         tags = self.request.query_params.get('tags', None)
         orgaid = self.request.query_params.get('orga', None)
         order = self.request.query_params.get('order', 'e')
-        
-        if(order == "-c"):
+
+        if (order == "-c"):
             posts = posts.order_by('create_date')
-        elif(order == "c"):
+        elif (order == "c"):
             posts = posts.order_by('-create_date')
         else:
             posts = posts.order_by('expire_date', '-create_date')
 
         if orgaid is not None:
             try:
-                orga = Organization.objects.get(pk=orgaid);
+                orga = Organization.objects.get(pk=orgaid)
                 posts = posts.filter(owner=orga)
             except Organization.DoesNotExist:
                 posts = posts.none()
@@ -268,6 +294,5 @@ class SearchPostViewSet(mixins.ListModelMixin,
             posts = posts.filter(searchQ).distinct()
         if tags is not None:
             posts = posts.filter(tags__name__in=tags.split(","))
-
 
         return posts

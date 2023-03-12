@@ -52,17 +52,19 @@ export const usePostStore = defineStore("posts", () => {
     const { data } = await ApiService.delete("posts", post.id);
     return data;
   }
-  async function updateThumbnail(postid, file) {
+  async function updateThumbnail(postid, file, onProgressCB) {
     const { data } = await ApiService.postFile(
       "posts/" + postid + "/update_thumbnail",
-      file
+      file,
+      onProgressCB
     );
     return data.url;
   }
-  async function addPhoto(postid, file) {
+  async function addPhoto(postid, file, onProgressCB) {
     const { data } = await ApiService.postFile(
       "posts/" + postid + "/add_photo",
-      file
+      file,
+      onProgressCB
     );
     return data.url;
   }
