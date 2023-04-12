@@ -1,4 +1,4 @@
-#Open Stock
+# Open Stock
 
 Ceci est un site d'annonce minimaliste.
 
@@ -20,7 +20,7 @@ Afin de limité la taille de la base de donnée, une seule annonce à l'état de
 Les annonces ont une date d'expiration. Elles sont définitivement supprimées du système 30 jours après leur expiration.
 Il est possible de retirer la date d'expiration mais cela n'est pas conseillé. Il vaut mieux mettre une date d'expiration très longue comme 1 an voir plus.
 
-##Techos
+## Techos
 
 - Python django
 - Vue JS
