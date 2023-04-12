@@ -33,7 +33,15 @@ try:
 except ImportError:
     print('error import local settings')
 
-ALLOWED_HOSTS = []
+if DEBUG == False :
+    SESSION_COOKIE_SECURE=True
+    CSRF_COOKIE_SECURE=True
+    USE_X_FORWARDED_HOST=True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CORS_ALLOW_CREDENTIALS = True
+
+
 
 
 # Application definition
@@ -75,7 +83,7 @@ ROOT_URLCONF = 'openstock.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, './staticfiles'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -179,12 +187,6 @@ if CAS_AUTH:
 
 TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_STRIP_UNICODE_WHEN_SLUGIFYING = True
-
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-]
-CSRF_TRUSTED_ORIGINS = [
-]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
