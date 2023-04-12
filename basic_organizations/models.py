@@ -2,6 +2,22 @@ from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
 from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+User = get_user_model()
+
+@receiver(post_save, sender=User)
+def update_individual_organization(sender, instance, created, update_fields, **kwargs):
+    o = instance.myorganizations.filter(isIndividual=True).first()
+    if o is None and instance.is_active and instance.email:
+        o = Organization(name=instance.username, contact=instance.email, owner=instance, isIndividual=True)
+        o.save()
+    elif o is not None:
+        if update_fields is None or (update_fields is not None and ('email' in update_fields)):
+            o.contact=instance.email
+            o.save()
+
 
 
 class Organization(models.Model):

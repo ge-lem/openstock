@@ -28,6 +28,11 @@ else:
     with open('/etc/django_secret_key.txt') as f:
         SECRET_KEY = f.read().strip()
 
+try:
+    from .local_settings import *
+except ImportError:
+    print('error import local settings')
+
 ALLOWED_HOSTS = []
 
 
@@ -50,9 +55,8 @@ INSTALLED_APPS = [
     'basic_organizations',
     'taggit',
     'basic_invitations',
-    'posts'
+    'posts',
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -62,7 +66,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_cas_ng.middleware.CASMiddleware',
 ]
+
 
 ROOT_URLCONF = 'openstock.urls'
 
@@ -95,9 +101,16 @@ DATABASES = {
     }
 }
 
-#AUTHENTICATION_BACKENDS = (
-#    'django_su.backends.SuBackend',
-#)
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'django_su.backends.SuBackend',
+]
+
+if CAS_AUTH:
+    INSTALLED_APPS.append('django_cas_ng')
+    MIDDLEWARE.append('django_cas_ng.middleware.CASMiddleware')
+    AUTHENTICATION_BACKENDS.append('django_cas_ng.backends.CASBackend')
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -121,24 +134,23 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'knox.auth.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        ),
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.SearchFilter','rest_framework.filters.OrderingFilter',),
-    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.LimitOffsetPagination',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100,
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
     ),
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
-    ],
+        'rest_framework.throttling.UserRateThrottle'],
     'DEFAULT_THROTTLE_RATES': {
         'anon': '10/day',
-        'user': '1000/day'
-    },
-
+        'user': '1000/day'},
 }
 
 
@@ -149,24 +161,29 @@ DJOSER = {
     'TOKEN_MODEL': 'knox.models.AuthToken',
     'SEND_ACTIVATION_EMAIL': False,
     'USER_CREATE_PASSWORD_RETYPE': True,
-    'SERIALIZERS' : {
+    'SERIALIZERS': {
         'current_user': 'myauth.serializers.UserSerializer',
         'user_create_password_retype': 'myauth.serializers.UserCreatePasswordRetypeSerializer',
-        },
+    },
     'PERMISSIONS': {
         'user_create': ['basic_invitations.permissions.IsInvited'],
         'user': ['basic_organizations.permissions.IsCoworker'],
         'username_reset': ['rest_framework.permissions.IsAdmin'],
         'username_reset_confirm': ['rest_framework.permissions.IsAdmin'],
-    }
-}
+    }}
+
+# If CAS auth only admin can create a user.
+if CAS_AUTH:
+    DJOSER['PERMISSIONS']['user_create'] = [
+        'rest_framework.permissions.IsAdmin']
 
 TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_STRIP_UNICODE_WHEN_SLUGIFYING = True
 
-INVITATIONS_INVITATION_ONESHOT = False
-
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
+]
+CSRF_TRUSTED_ORIGINS = [
 ]
 
 # Internationalization
@@ -180,7 +197,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-NEWPOST_TITLE="Nouvelle annonce"
+NEWPOST_TITLE = "Nouvelle annonce"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

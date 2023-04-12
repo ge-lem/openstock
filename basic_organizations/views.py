@@ -2,8 +2,6 @@ from django.shortcuts import render
 from django.db.models import Q
 from django.db.utils import IntegrityError
 from django.contrib.auth import get_user_model
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -12,19 +10,6 @@ from .models import Organization
 from .serializers import OrganizationSerializer
 
 User = get_user_model()
-
-@receiver(post_save, sender=User)
-def update_individual_organization(sender, instance, created, update_fields, **kwargs):
-    if(created):
-        o = Organization(name=instance.username, contact=instance.email, owner=instance, isIndividual=True)
-        o.save()
-    else:
-        if update_fields is None or (update_fields is not None and ('email' in update_fields)):
-            o = instance.myorganizations.filter(isIndividual=True).first()
-            if o is not None:
-                o.contact=instance.email
-                o.save()
-
 
 class OrganizationPermission(permissions.BasePermission):
     """

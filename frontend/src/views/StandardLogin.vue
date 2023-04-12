@@ -11,7 +11,7 @@
           {{ error }}
         </div>
 
-        <form v-if="!isAuthenticated">
+        <form v-if="!isAuthenticated && !casAuth">
           <div class="mb-3">
             <label for="inputUsername" class="form-label"
               >Nom Utilisateur</label
@@ -41,7 +41,14 @@
             Pas de compte ? Demandez à un utilisateur de vous inviter.
           </div>
         </form>
-        <div v-else>
+        <div v-if="!isAuthenticated && casAuth">
+          <div class="mb-3">
+            <button @click.prevent="casLogin" class="btn btn-dark w-100">
+              Login CAS
+            </button>
+          </div>
+        </div>
+        <div v-if="isAuthenticated">
           <div class="text-center d-flex flex-column">
             <span class="text-center fs-1">Vous êtes bien connecté.</span>
           </div>
@@ -57,10 +64,16 @@ import { useAuthStore } from "@/stores/auth";
 const store = useAuthStore();
 const { isAuthenticated } = storeToRefs(store);
 
+const casAuth = import.meta.env.VITE_APP_CAS_AUTH;
+
 const username = ref("");
 const password = ref("");
 
 const errors = ref([]);
+
+async function casLogin(){
+    await store.casLogin();
+}
 
 async function login() {
   try {

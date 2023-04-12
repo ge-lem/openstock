@@ -25,6 +25,8 @@
               class="form-control"
               type="text"
               required
+              :readonly="casAuth"
+              :disabled="casAuth"
             />
           </div>
           <div class="mb-3">
@@ -35,6 +37,8 @@
               class="form-control"
               type="text"
               required
+              :readonly="casAuth"
+              :disabled="casAuth"
             />
           </div>
           <div class="mb-3">
@@ -46,6 +50,8 @@
               type="email"
               required
               :class="{ 'is-invalid': errors.email.length }"
+              :readonly="casAuth"
+              :disabled="casAuth"
             />
             <div
               v-for="error in errors.email"
@@ -60,13 +66,14 @@
               class="btn btn-primary"
               type="button"
               @click.prevent="updateUserButton"
+              v-if="!casAuth"
             >
               Valider
             </button>
           </div>
         </form>
       </div>
-      <div class="row mt-3">
+      <div v-if="!casAuth" class="row mt-3">
         <form ref="invitationForm" class="form needs-validation">
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"
@@ -103,6 +110,8 @@ const { authUser } = storeToRefs(authStore);
 const { updateUser } = authStore;
 
 const showModal = inject("show");
+
+const casAuth = import.meta.env.VITE_APP_CAS_AUTH;
 
 const tempValue = reactive({ first_name: "testsss", last_name: "", email: "" });
 

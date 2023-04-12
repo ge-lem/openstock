@@ -26,11 +26,19 @@ export const useAuthStore = defineStore("auth", () => {
     const { data: datauser } = await ApiService.get("auth/users/me");
     authUser.value = datauser;
   }
+
+  async function casLogin() {
+    window.location = import.meta.env.VITE_APP_API_URL + "auth/cas/login/";
+  }
+
   function logout(send = true) {
     if (send) ApiService.post("auth/logout");
     ApiService.setToken(null);
     authUser.value = null;
     localStorage.removeItem("authToken");
+    if (send && import.meta.env.VITE_APP_CAS_AUTH) {
+      window.location = import.meta.env.VITE_APP_API_URL + "auth/cas/logout/";
+    }
   }
 
   async function waitFirstCheck() {
@@ -40,13 +48,19 @@ export const useAuthStore = defineStore("auth", () => {
   async function checkAuth() {
     const data = JSON.parse(localStorage.getItem("authToken"));
     const date = new Date().toISOString();
+    let logged = false;
     if (data && date < data.expiry) {
       ApiService.setToken(data["token"]);
       const { data: datauser } = await ApiService.get("auth/users/me");
       authUser.value = datauser;
     } else {
-      logout(false);
+      try {
+        await login();
+      } catch (e) {
+        logout(false);
+      }
     }
+
     if (!firstCheck.value) {
       firstCheck.value = true;
       resolveFC();
@@ -97,6 +111,7 @@ export const useAuthStore = defineStore("auth", () => {
     checkAuth,
     updateUser,
     login,
+    casLogin,
     logout,
     searchUsers,
     getUser,

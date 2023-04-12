@@ -23,13 +23,29 @@ from django.conf import settings
 auth_urls = include('myauth.urls')
 
 urlpatterns = [
-    path('su/', include('django_su.urls')),
-    path('api/auth/', auth_urls),
-    path('admin/', admin.site.urls),
-    path('api/', include('basic_organizations.urls')),
-    path('api/', include('posts.urls')),
-    path('api/invitation/', include('basic_invitations.urls')),
-    re_path('^.*$', ensure_csrf_cookie(TemplateView.as_view(template_name="index.html"))),
+    path(
+        'su/',
+        include('django_su.urls')),
+    path(
+        'api/auth/',
+        auth_urls),
+    path(
+        'admin/',
+        admin.site.urls),
+    path(
+        'api/',
+        include('basic_organizations.urls')),
+    path(
+        'api/',
+        include('posts.urls')),
+    path(
+        'api/invitation/',
+        include('basic_invitations.urls')),
+    re_path(
+        '^.*$',
+        ensure_csrf_cookie(
+            TemplateView.as_view(
+                template_name="index.html"))),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
