@@ -70,8 +70,8 @@ const password = ref("");
 
 const errors = ref([]);
 
-async function casLogin(){
-    await store.casLogin();
+async function casLogin() {
+  await store.casLogin();
 }
 
 async function login() {

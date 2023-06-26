@@ -36,7 +36,7 @@ export const useAuthStore = defineStore("auth", () => {
     ApiService.setToken(null);
     authUser.value = null;
     localStorage.removeItem("authToken");
-    if (send && import.meta.env.VITE_APP_CAS_AUTH=="true") {
+    if (send && import.meta.env.VITE_APP_CAS_AUTH == "true") {
       window.location = import.meta.env.VITE_APP_API_URL + "auth/cas/logout/";
     }
   }
@@ -48,7 +48,6 @@ export const useAuthStore = defineStore("auth", () => {
   async function checkAuth() {
     const data = JSON.parse(localStorage.getItem("authToken"));
     const date = new Date().toISOString();
-    let logged = false;
     if (data && date < data.expiry) {
       ApiService.setToken(data["token"]);
       const { data: datauser } = await ApiService.get("auth/users/me");

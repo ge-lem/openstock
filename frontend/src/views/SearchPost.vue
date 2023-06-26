@@ -34,6 +34,16 @@
               />
             </div>
             <div class="mb-3">
+              <label class="form-label" for="select-type"
+                >Type d'annonces</label
+              >
+              <select v-model="typePost" id="select-type" class="form-select">
+                <option value="b">Les deux</option>
+                <option value="s">Propositions</option>
+                <option value="r">Requêtes</option>
+              </select>
+            </div>
+            <div class="mb-3">
               <label class="form-label" for="select-date">Trie par dates</label>
               <select v-model="dateOrder" id="select-date" class="form-select">
                 <option value="e">Date expiration</option>
@@ -56,26 +66,23 @@
                 <li v-for="p in posts" :key="p.id" class="list-group-item">
                   <div class="row">
                     <div class="col col-3">
-                      <img
+                      <router-link
                         v-if="p.thumbnail"
-                        :src="'/media/' + p.thumbnail"
-                        class="img-thumbnail img-fluid"
-                        alt="thumbnail"
-                      />
+                        :to="{ name: 'showpost', params: { postid: p.id } }"
+                      >
+                        <img
+                          :src="'/media/' + p.thumbnail"
+                          class="img-thumbnail img-fluid"
+                          alt="thumbnail"
+                        />
+                      </router-link>
                     </div>
                     <div class="col">
                       <div class="d-flex justify-content-between">
                         <h4>
-                          {{ p.isRequest ? "Requête: " : "" }}{{ p.title }}
+                          {{ p.is_request ? "Requête: " : "" }}{{ p.title }}
                         </h4>
-                        <router-link
-                          :to="{
-                            name: 'showorga',
-                            params: { orgaid: p.owner },
-                          }"
-                        >
-                          <h5>{{ orgas[p.owner].name }}</h5>
-                        </router-link>
+
                         <div class="ms-1">
                           <router-link
                             class="btn btn-primary"
@@ -86,6 +93,16 @@
                         </div>
                       </div>
                       <markdown :description="p.description" :limit="3" />
+                      <p>
+                        <router-link
+                          :to="{
+                            name: 'showorga',
+                            params: { orgaid: p.owner },
+                          }"
+                        >
+                          {{ orgas[p.owner].name }}
+                        </router-link>
+                      </p>
                     </div>
                   </div>
                 </li>
@@ -133,6 +150,7 @@ const loading = ref(true);
 
 const orga = ref("");
 const dateOrder = ref("e");
+const typePost = ref("b");
 const tagsInput = ref([]);
 const tags = ref([]);
 const searchInput = useDebouncedRef("");
@@ -150,6 +168,7 @@ function onPageChange(page) {
 async function refresh() {
   let paramsDefault = {};
   paramsDefault["order"] = dateOrder.value;
+  paramsDefault["type"] = typePost.value;
 
   if (searchInput.value) {
     paramsDefault["search"] = searchInput.value;
@@ -172,7 +191,7 @@ async function refresh() {
 useSearchStorage(
   "search",
   refresh,
-  { orga, searchInput, tagsInput, dateOrder },
+  { orga, searchInput, tagsInput, dateOrder, typePost },
   currentPage
 );
 

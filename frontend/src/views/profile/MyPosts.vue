@@ -61,7 +61,7 @@
                     'table-warning': p.status == 4 || p.status == 5,
                   }"
                 >
-                  <td>{{ p.isRequest ? "Requête: " : "" }}{{ p.title }}</td>
+                  <td>{{ p.is_request ? "Requête: " : "" }}{{ p.title }}</td>
                   <td>{{ orgas[p.owner].name }}</td>
                   <td>{{ statusDict[p.status] }}</td>
                   <td>{{ p.expire_date }}</td>

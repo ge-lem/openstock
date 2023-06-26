@@ -148,8 +148,8 @@ async function newPost(orga) {
   router.push({ name: "editpost", params: { postid: newpost.id } });
 }
 
-async function refreshAuth(){
-if (isAuthenticated.value) {
+async function refreshAuth() {
+  if (isAuthenticated.value) {
     const orgaImp = await import("@/stores/orgas");
     orgaStore = orgaImp.useOrgaStore();
     const postImp = await import("@/stores/posts");
@@ -165,11 +165,10 @@ if (isAuthenticated.value) {
   }
 }
 
-watch(isAuthenticated,async ()=>{
-    console.log("auth watch");
+watch(isAuthenticated, async () => {
+  console.log("auth watch");
   refreshAuth();
-
-})
+});
 
 onBeforeMount(async () => {
   refreshAuth();
