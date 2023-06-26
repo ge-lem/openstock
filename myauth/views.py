@@ -10,8 +10,6 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from django_cas_ng.signals import cas_user_authenticated
-from django_auth_ldap.backend import LDAPBackend
 from django.conf import settings
 
 from knox.views import LoginView as KnoxLoginView
@@ -36,15 +34,18 @@ def deactivate_invitation(sender, user, request, **kwargs):
         pass
 
 
-@receiver(cas_user_authenticated)
-def cas_user_authenticated_callback(sender, **kwargs):
-    args = {}
-    args.update(kwargs)
-    user = LDAPBackend().populate_user(args.get('user').username)
-    if user is not None:
-        user.is_active = user.email.endswith(
-            tuple(settings.LDAP_ACTIVE_EMAIL_FILTER))
-        user.save()
+if settings.CAS_AUTH:
+    from django_cas_ng.signals import cas_user_authenticated
+    from django_auth_ldap.backend import LDAPBackend
+    @receiver(cas_user_authenticated)
+    def cas_user_authenticated_callback(sender, **kwargs):
+        args = {}
+        args.update(kwargs)
+        user = LDAPBackend().populate_user(args.get('user').username)
+        if user is not None:
+            user.is_active = user.email.endswith(
+                tuple(settings.LDAP_ACTIVE_EMAIL_FILTER))
+            user.save()
 
 
 class LoginView(KnoxLoginView):

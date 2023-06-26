@@ -6,8 +6,6 @@ from knox import views as knox_views
 
 from rest_framework.routers import DefaultRouter
 
-import django_cas_ng.views
-
 from myauth.views import LoginView, UserList, SelfView
 
 router = DefaultRouter()
@@ -37,6 +35,7 @@ knox_urlpatterns = [
 ]
 
 if settings.CAS_AUTH:
+    import django_cas_ng.views
     users_urlpatterns.append(
         path(
             'cas/login/',

@@ -10,7 +10,6 @@
         >
           {{ error }}
         </div>
-
         <form v-if="!isAuthenticated && !casAuth">
           <div class="mb-3">
             <label for="inputUsername" class="form-label"
@@ -64,7 +63,7 @@ import { useAuthStore } from "@/stores/auth";
 const store = useAuthStore();
 const { isAuthenticated } = storeToRefs(store);
 
-const casAuth = import.meta.env.VITE_APP_CAS_AUTH;
+const casAuth = import.meta.env.VITE_APP_CAS_AUTH == "true";
 
 const username = ref("");
 const password = ref("");
