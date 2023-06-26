@@ -1,0 +1,15 @@
+[Unit]
+Description=Openstock website
+DefaultDependencies=no
+After=multi-user.target
+
+[Service]
+Type=simple
+User=openstock
+Group=openstock
+ExecStart=/path/to/startup.sh
+TimeoutStartSec=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
