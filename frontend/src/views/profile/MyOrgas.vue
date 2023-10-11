@@ -2,11 +2,20 @@
   <div class="card">
     <div class="card-header">
       <h3 class="float-start">Mes organisations</h3>
-      <router-link
-        class="btn btn-primary float-end"
-        :to="{ name: 'editorga', params: { orgaid: 'new' } }"
-        >Nouvelle Organisation</router-link
-      >
+
+      <div class="btn-group float-end">
+        <button
+          class="btn btn-outline-primary"
+          @click.prevent="() => (showHelp = true)"
+        >
+          <span class="badge rounded-pill text-bg-primary">i</span>
+        </button>
+        <router-link
+          class="btn btn-primary"
+          :to="{ name: 'editorga', params: { orgaid: 'new' } }"
+          >Nouvelle Organisation</router-link
+        >
+      </div>
     </div>
     <div class="card-body">
       <div class="row">
@@ -22,7 +31,7 @@
               </thead>
               <tbody>
                 <tr v-for="orga in orgas" :key="orga.id">
-                  <td>{{ orga.isIndividual ? "Personelle" : orga.name }}</td>
+                  <td>{{ orga.isIndividual ? "Individuelle" : orga.name }}</td>
                   <td>{{ orga.contact }}</td>
                   <td>
                     <router-link
@@ -43,16 +52,38 @@
       </div>
     </div>
   </div>
+  <modal
+    id="help orga"
+    :show="showHelp"
+    title="Aide Organisations"
+    :resolve="() => (showHelp = false)"
+  >
+    <div class="row">
+      <p>
+        Une annonce est forcément reliée à une organisation. Toute personne
+        possède au moins une organisation qui lui est propre dont il est le seul
+        gestionnaire.
+      </p>
+      <p>
+        Cependant une personne peut également créer une organisation auquelle
+        elle peut ajouter des gestionnaires. Les gestionnaires ont les mêmes
+        droits que le propriétaire excepté celui de supprimer l'organisation.
+      </p>
+    </div>
+  </modal>
 </template>
 
 <script setup>
 import { ref, onBeforeMount } from "vue";
 import { storeToRefs } from "pinia";
+import Modal from "@/plugins/modal";
 import { useAuthStore } from "@/stores/auth";
 import { useOrgaStore } from "@/stores/orgas";
 const { authUser } = storeToRefs(useAuthStore());
 const orgaStore = useOrgaStore();
 const { fetchOrgas } = orgaStore;
+
+const showHelp = ref(false);
 
 const orgas = ref([]);
 onBeforeMount(async () => {

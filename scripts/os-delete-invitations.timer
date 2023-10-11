@@ -1,0 +1,9 @@
+[Unit]
+Description=Delete openstock old invitation daily
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target

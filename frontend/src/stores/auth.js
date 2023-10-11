@@ -48,7 +48,6 @@ export const useAuthStore = defineStore("auth", () => {
   async function checkAuth() {
     const data = JSON.parse(localStorage.getItem("authToken"));
     const date = new Date().toISOString();
-    let logged = false;
     if (data && date < data.expiry) {
       ApiService.setToken(data["token"]);
       const { data: datauser } = await ApiService.get("auth/users/me");

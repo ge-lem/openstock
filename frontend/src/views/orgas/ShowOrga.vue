@@ -41,7 +41,7 @@ const { getOrga } = orgaStore;
 
 const desc = computed(() => {
   if (orga.value.isIndividual)
-    return "Organisation personnelle de " + orga.value.name;
+    return "Organisation individuelle de " + orga.value.name;
   else return orga.value.description;
 });
 

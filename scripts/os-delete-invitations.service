@@ -1,0 +1,10 @@
+[Unit]
+Description=Openstock delete invitations
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+User=openstock
+Group=openstock
+ExecStart=/path/to/deleteinvitations.sh
+

@@ -273,6 +273,7 @@ class SearchPostViewSet(mixins.ListModelMixin,
         tags = self.request.query_params.get('tags', None)
         orgaid = self.request.query_params.get('orga', None)
         order = self.request.query_params.get('order', 'e')
+        typePost = self.request.query_params.get('type', 'b')
 
         if (order == "-c"):
             posts = posts.order_by('create_date')
@@ -280,6 +281,11 @@ class SearchPostViewSet(mixins.ListModelMixin,
             posts = posts.order_by('-create_date')
         else:
             posts = posts.order_by('expire_date', '-create_date')
+
+        if (typePost == "r"):
+            posts = posts.filter(is_request=True)
+        elif (typePost == "p"):
+            posts = posts.filter(is_request=False)
 
         if orgaid is not None:
             try:

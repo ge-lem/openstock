@@ -1,7 +1,7 @@
 <template>
   <div v-if="!loading" class="card">
     <div class="card-header">
-      <h3>{{ post.isRequest ? "Requête: " : "" }}{{ post.title }}</h3>
+      <h3>{{ post.is_request ? "Requête: " : "" }}{{ post.title }}</h3>
     </div>
     <div class="card-body">
       <div class="row">

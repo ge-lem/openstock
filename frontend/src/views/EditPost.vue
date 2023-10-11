@@ -4,13 +4,21 @@
       <h3 class="float-start">
         {{ statusDict[post.status] }} : {{ post.title }}
       </h3>
-      <button
-        @click.prevent="deletePost"
-        class="btn btn-danger float-end"
-        type="button"
-      >
-        Supprimer
-      </button>
+      <div class="btn-group float-end">
+        <button
+          class="btn btn-outline-primary"
+          @click.prevent="() => (showHelp = true)"
+        >
+          <span class="badge rounded-pill text-bg-primary">i</span>
+        </button>
+        <button
+          @click.prevent="deletePost"
+          class="btn btn-danger"
+          type="button"
+        >
+          Supprimer
+        </button>
+      </div>
     </div>
     <div class="card-body">
       <div class="row">
@@ -23,7 +31,7 @@
                   class="btn-check"
                   type="radio"
                   name="typepost"
-                  v-model="post.isRequest"
+                  v-model="post.is_request"
                   :value="false"
                 /><label
                   class="form-label btn btn-outline-primary"
@@ -34,7 +42,7 @@
                   class="btn-check"
                   type="radio"
                   name="typepost"
-                  v-model="post.isRequest"
+                  v-model="post.is_request"
                   :value="true"
                 /><label
                   class="form-label btn btn-outline-primary"
@@ -87,7 +95,7 @@
                     Upload
                   </button>
                   <button
-                    v-else="thumbProgress != null"
+                    v-else
                     class="btn btn-secondary"
                     type="button"
                     disabled
@@ -114,7 +122,7 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label class="form-label">Quantité</label>
+                <label class="form-label">Quantité (optionelle)</label>
                 <div class="input-group mb-3">
                   <input
                     v-model="post.quantity"
@@ -143,7 +151,7 @@
                 />
               </div>
               <div class="mb-3">
-                <label class="form-label" for="photos">Photos</label>
+                <label class="form-label" for="photos">Photos (max 10)</label>
                 <div class="input-group">
                   <input
                     id="addphoto"
@@ -162,7 +170,7 @@
                     Ajouter
                   </button>
                   <button
-                    v-else="photoProgress != null"
+                    v-else
                     class="btn btn-secondary"
                     type="button"
                     disabled
@@ -210,10 +218,12 @@
             rows="5"
             class="col-12"
           ></textarea>
-          <a href="#" @click.prevent="showHelp = true">Aide</a>
+          <a href="#" @click.prevent="showHelpMark = true"
+            >Aide au format Markdown</a
+          >
           <h5>Aperçu</h5>
           <markdown
-            v-model:showHelp="showHelp"
+            v-model:showHelp="showHelpMark"
             :description="post.description"
           />
         </div>
@@ -257,11 +267,27 @@
       </div>
     </div>
   </div>
+  <modal
+    id="help orga"
+    :show="showHelp"
+    title="Aide Organisations"
+    :resolve="() => (showHelp = false)"
+  >
+    <div class="row">
+      <p>
+        Afin de limiter le poid du site, chaque organisation (individuelle ou
+        non) n'a le droit d'avoir qu'une seule annonce à l'état de brouillon.
+        Vous devez compléter et publier (ou supprimier) l'annonce brouillon afin
+        d'en créer une nouvelle.
+      </p>
+    </div>
+  </modal>
 </template>
 <script setup>
 import { onBeforeMount, ref, computed, inject } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import Modal from "@/plugins/modal";
 
 import { useAuthStore } from "@/stores/auth";
 import { useOrgaStore } from "@/stores/orgas";
@@ -271,6 +297,7 @@ import Markdown from "@/components/ui/MarkdownComponent.vue";
 
 const showMessage = inject("show");
 
+const showHelpMark = ref(false);
 const showHelp = ref(false);
 
 const { authUser } = storeToRefs(useAuthStore());
@@ -326,7 +353,7 @@ const thumbnail = ref();
 const thumbF = ref(null);
 const thumbProgress = ref(null);
 function thumbOnProgressCB(percent) {
-  if(percent==100) thumbProgress.value="compression image"
+  if (percent == 100) thumbProgress.value = "compression image";
   else thumbProgress.value = percent;
 }
 
@@ -363,7 +390,7 @@ const addphotoinput = ref();
 const photoF = ref(null);
 const photoProgress = ref(null);
 function photoOnProgressCB(percent) {
-  if(percent==100) photoProgress.value="compression image"
+  if (percent == 100) photoProgress.value = "compression image";
   else photoProgress.value = percent;
 }
 function changePhoto() {

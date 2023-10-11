@@ -24,7 +24,7 @@
                 class="form-control"
                 type="text"
                 required
-                @input="errors.name=[]"
+                @input="errors.name = []"
                 :class="{ 'is-invalid': errors.name.length }"
               />
               <div
@@ -42,7 +42,7 @@
                 class="form-control"
                 type="email"
                 required
-                @input="errors.contact=[]"
+                @input="errors.contact = []"
                 :class="{ 'is-invalid': errors.contact.length }"
               />
               <div
@@ -64,8 +64,7 @@
             </div>
             <div>
               <label class="form-label">Manageurs</label
-              ><UserDynList v-model="orga.managers">
-              </UserDynList>
+              ><UserDynList v-model="orga.managers"> </UserDynList>
             </div>
           </form>
         </div>
