@@ -67,4 +67,4 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         try:
             serializer.save(owner=self.request.user)
         except IntegrityError:
-            raise ValidationError({'name': ['Ce nom est déjà utilisé']})
+            raise ValidationError({'name': ['Ce nom est déjà utilisé']}, code='unique')
