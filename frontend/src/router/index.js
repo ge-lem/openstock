@@ -10,6 +10,26 @@ const router = createRouter({
       name: "home",
       component: HomeView,
     },
+  {
+    path: "/contact",
+    name: "contact",
+    component: () => import("../views/ContactPage.vue"),
+  },
+  {
+    path: "/credits",
+    name: "credits",
+    component: () => import("../views/CreditsPage.vue"),
+  },
+  {
+    path: "/datapolicy",
+    name: "datapolicy",
+    component: () => import("../views/DataPolicy.vue"),
+  },
+  {
+    path: "/legalnotice",
+    name: "legalnotice",
+    component: () => import("../views/LegalNotice.vue"),
+  },
     {
       path: "/login",
       name: "login",
@@ -77,14 +97,6 @@ const router = createRouter({
       name: "showorga",
       component: () => import("../views/orgas/ShowOrga.vue"),
       meta: { requiresAuth: true },
-    },
-    {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AboutView.vue"),
     },
   ],
 });

@@ -1,0 +1,236 @@
+@import "fonts";
+
+$prefix: 'os-';
+
+@import "../node_modules/bootstrap/scss/functions";
+
+$font-stack-open: "Open Sans", Verdana, sans-serif;
+$font-stack-calistoga:  "Calistoga", serif;
+
+$text-color: #363636;
+$color-secondary: #2d3039;
+$color-neutral: #f3f3f3;
+
+
+
+$primary: #00B649;
+$enable-rounded: false;
+$btn-font-weight: 700;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1366px,
+  xxl: 1636px
+);
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1204px,
+  xxl: 1636px
+);
+
+
+
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/variables-dark";
+
+
+// 4. Include any default map overrides here
+
+$display-font-sizes: (
+  1: 5rem,
+  2: 3rem,
+  3: 2.5rem,
+  4: 2rem,
+  5: 1.5rem,
+  6: 1rem
+);
+
+$font-family-sans-serif:$font-stack-open;
+
+$display-font-family: $font-stack-calistoga;
+$display-font-style:  null;
+$display-font-weight: 400;
+$display-line-height: 3.9rem;
+
+
+
+$navbar-dark-color:                $white;
+$navbar-dark-hover-color:          $white;
+$navbar-dark-active-color:         $white;
+$navbar-dark-disabled-color:       $white;
+
+$navbar-light-color:                $primary;
+$navbar-light-hover-color:          $primary;
+$navbar-light-active-color:         $primary;
+
+$navbar-padding-y:0;
+$navbar-toggler-padding-y: 0;
+$navbar-toggler-padding-x: 0;
+
+$dropdown-link-color:          $primary;
+$dropdown-bg:                  $white;
+$dropdown-link-hover-color:    $white;
+$dropdown-link-hover-bg:       $primary;
+$dropdown-link-active-color:   $white;
+$dropdown-link-active-bg:      $primary;
+
+
+$dropdown-dark-link-color:          $white;
+$dropdown-dark-bg:                  $primary;
+$dropdown-dark-link-hover-color:    $primary;
+$dropdown-dark-link-hover-bg:       $white;
+$dropdown-dark-link-active-color:   $primary;
+$dropdown-dark-link-active-bg:      $white;
+
+// 5. Include remainder of required parts
+@import "../node_modules/bootstrap/scss/maps";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/root";
+@import "../node_modules/bootstrap/scss/utilities";
+
+// Layout & components
+// 6. Optionally include any other parts as needed
+@import "../node_modules/bootstrap/scss/reboot";
+@import "../node_modules/bootstrap/scss/type";
+@import "../node_modules/bootstrap/scss/images";
+@import "../node_modules/bootstrap/scss/containers";
+@import "../node_modules/bootstrap/scss/grid";
+@import "../node_modules/bootstrap/scss/tables";
+@import "../node_modules/bootstrap/scss/forms";
+@import "../node_modules/bootstrap/scss/buttons";
+//@import "../node_modules/bootstrap/scss/transitions";
+@import "../node_modules/bootstrap/scss/dropdown";
+@import "../node_modules/bootstrap/scss/button-group";
+@import "../node_modules/bootstrap/scss/nav";
+@import "../node_modules/bootstrap/scss/navbar";
+@import "../node_modules/bootstrap/scss/card";
+//@import "../node_modules/bootstrap/scss/accordion";
+//@import "../node_modules/bootstrap/scss/breadcrumb";
+@import "../node_modules/bootstrap/scss/pagination";
+//@import "../node_modules/bootstrap/scss/badge";
+//@import "../node_modules/bootstrap/scss/alert";
+//@import "../node_modules/bootstrap/scss/progress";
+@import "../node_modules/bootstrap/scss/list-group";
+@import "../node_modules/bootstrap/scss/close";
+//@import "../node_modules/bootstrap/scss/toasts";
+@import "../node_modules/bootstrap/scss/modal";
+//@import "../node_modules/bootstrap/scss/tooltip";
+//@import "../node_modules/bootstrap/scss/popover";
+//@import "../node_modules/bootstrap/scss/carousel";
+//@import "../node_modules/bootstrap/scss/spinners";
+//@import "../node_modules/bootstrap/scss/offcanvas";
+//@import "../node_modules/bootstrap/scss/placeholders";
+
+// Helpers
+@import "../node_modules/bootstrap/scss/helpers";
+
+// Utilities
+@import "../node_modules/bootstrap/scss/utilities/api";
+// scss-docs-end import-stack
+
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    @if $color == "light" {
+      @include button-variant(
+        $value,
+        $value,
+        $hover-background: shade-color($value, $btn-hover-bg-shade-amount),
+        $hover-border: shade-color($value, $btn-hover-border-shade-amount),
+        $active-background: shade-color($value, $btn-active-bg-shade-amount),
+        $active-border: shade-color($value, $btn-active-border-shade-amount)
+      );
+    } @else if $color == "dark" {
+      @include button-variant(
+        $value,
+        $value,
+        $hover-background: tint-color($value, $btn-hover-bg-tint-amount),
+        $hover-border: tint-color($value, $btn-hover-border-tint-amount),
+        $active-background: tint-color($value, $btn-active-bg-tint-amount),
+        $active-border: tint-color($value, $btn-active-border-tint-amount)
+      );
+    } @else {
+      @include button-variant($value, $value,
+      $color:$white,
+      $hover-background: $white,
+  $hover-color: $value,
+  $active-background:$white,
+  $active-color: $value,
+    );
+    }
+  }
+}
+
+
+.container-liquid {
+  @extend .container;
+}
+
+.dropdown-toggle:after {
+  content: ">";
+  display: inline-block;
+  transform: rotate(90deg);
+  margin-left: 0.255em;
+  vertical-align: 0;
+  border: 0;
+}
+.dropdown-menu
+{
+  padding: 15px;
+  border: none;
+  border-radius: 0;
+  padding: 15px 15px 5px 15px;
+  .dropdown-item{
+    text-transform: uppercase;
+    font-family: $font-stack-open;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 19px;
+  }
+}
+
+.btn
+{
+  text-transform: uppercase;
+  border-width: 2px;
+
+  font-size: 14px;
+  @include media-breakpoint-up(md) {
+    font-size: 15px;
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: 16px;
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: 18px;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+  }
+}
+
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+.svg-icon {
+  width: 1.5em;
+  height: 1.5em;
+}
+.svg-icon-small {
+  width: 1em;
+  height: 1em;
+}
+
+@import "header";
+@import "footer";
+@import "actualite";
+@import "page";

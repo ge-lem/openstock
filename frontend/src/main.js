@@ -8,8 +8,6 @@ import Modal from "./plugins/modal";
 
 ApiService.init();
 
-import "./assets/bootstrap.min.css";
-
 const app = createApp(App);
 app.use(Modal);
 var pinia = createPinia();

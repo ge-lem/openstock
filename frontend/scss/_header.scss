@@ -1,0 +1,251 @@
+// header.scss
+
+.header {
+  background-color: $color-neutral;
+}
+
+.navbar-toggler-icon {
+  background-image: none;
+}
+
+.navbar-toggler {
+  border: 0;
+  padding: var(--#{$prefix}btn-padding-y) var(--#{$prefix}btn-padding-x);
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.navbar-toggler-input {
+  display: none;
+
+  &:not(:checked) + .navbar-collapse {
+    display: none;
+  }
+}
+
+.nav-link {
+  font-family: $font-stack-open;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 19px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.#{$prefix}menu-top {
+  .container-liquid {
+    height: 45px;
+  }
+  .btn-label {
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+}
+
+##{$prefix}theme-branding {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  height: 124px;
+
+  @include media-breakpoint-only(sm) {
+    height: 152px;
+  }
+  @include media-breakpoint-up(md) {
+    height: 162px;
+  }
+
+  .site-logo {
+    img {
+      width: auto;
+      max-height: 65px;
+      @include media-breakpoint-only(sm) {
+        width: auto;
+        max-height: 95px;
+      }
+      @include media-breakpoint-only(md) {
+        width: auto;
+        max-height: 95px;
+      }
+      @include media-breakpoint-up(lg) {
+        width: auto;
+        max-height: 95px;
+      }
+    }
+  }
+
+  .logo-entity {
+    min-width: 250px;
+    background-position: center bottom;
+    background-size: cover;
+
+    img {
+      height: 162px;
+    }
+  }
+}
+
+.content-header {
+  flex-direction: row;
+  padding: 0;
+}
+
+.block-system-branding-block {
+  height: 160px;
+}
+
+.main-logo {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.site-name-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  flex-direction: column;
+  justify-content: center;
+
+  p {
+    &.site-name {
+      font-family: $font-stack-open;
+      font-size: 25px;
+      font-weight: 700;
+      line-height: 40px;
+      margin-bottom: 0;
+      color: $text-color;
+
+      @include media-breakpoint-only(md) {
+        font-size: 30px;
+        line-height: 41px;
+      }
+      @include media-breakpoint-only(lg) {
+        font-size: 38px;
+        line-height: 52px;
+      }
+      @include media-breakpoint-up(xl) {
+        font-size: 45px;
+        line-height: 61px;
+      }
+
+      a {
+        text-decoration: none;
+        color: $text-color;
+      }
+    }
+
+    &.site-slogan {
+      font-family: $font-stack-open;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 18px;
+      margin-bottom: 0;
+      color: $text-color;
+
+      @include media-breakpoint-up(md) {
+        font-size: 20px;
+        line-height: 27px;
+      }
+      @include media-breakpoint-up(lg) {
+        font-size: 23px;
+        line-height: 32px;
+      }
+      @include media-breakpoint-up(xl) {
+        font-size: 25px;
+        line-height: 34px;
+      }
+    }
+  }
+}
+
+.header-search-block {
+  position: absolute;
+  right: 0;
+  height: 100%;
+}
+
+.#{$prefix}theme-main-nav {
+  //height:40px;
+  align-items: stretch;
+  text-transform: uppercase;
+  .nav {
+    flex-wrap: unset;
+  }
+
+  .navbar-nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .dropdown-toggle:after {
+    content: none;
+    transform: none;
+  }
+
+  @include media-breakpoint-up(lg) {
+    .nav-item:first-child:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      height: 0;
+      border-bottom: 1px solid $white;
+      /* Look it's automatic */
+      width: 100%;
+      /* or some really large value */
+    }
+  }
+  @include media-breakpoint-down(lg) {
+    .nav-item:first-child:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      height: 0;
+      border-top: 1px solid $white;
+      /* Look it's automatic */
+      width: 100%;
+      /* or some really large value */
+    }
+  }
+
+  .nav-link {
+    @include media-breakpoint-up(md) {
+      font-size: 16px;
+    }
+    padding-bottom: 15px;
+    &.is-active,
+    &.active,
+    &:hover {
+      @include media-breakpoint-up(lg) {
+        &:after {
+          position: absolute;
+          z-index: 99;
+          bottom: 0px;
+          left: calc(50% - 5px);
+          display: block;
+          content: "";
+          border-bottom: 0.7em solid;
+          border-right: 0.4em solid transparent;
+          border-top: 0;
+          border-left: 0.4em solid transparent;
+          //border-width: 1px 1px 0 0;
+          //background: white;
+        }
+      }
+    }
+  }
+  span.btn-label {
+    display: none;
+    @include media-breakpoint-up(sm) {
+      display: inline-flex;
+    }
+  }
+}
