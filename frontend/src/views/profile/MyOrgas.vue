@@ -7,8 +7,7 @@
         <button
           class="btn btn-outline-primary"
           @click.prevent="() => (showHelp = true)"
-        >
-          <span class="badge rounded-pill text-bg-primary">i</span>
+        >Ⓘ
         </button>
         <router-link
           class="btn btn-primary"

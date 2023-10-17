@@ -92,7 +92,7 @@
                           </router-link>
                         </div>
                       </div>
-                      <markdown :description="p.description" :limit="3" />
+                      <markdown :description="p.abstract" :limit="3" />
                       <p>
                         <router-link
                           :to="{

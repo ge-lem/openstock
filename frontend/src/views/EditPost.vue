@@ -3,14 +3,16 @@
     <div class="card-header">
       <h3 class="float-start">
         {{ statusDict[post.status] }} : {{ post.title }}
-      </h3>
-      <div class="btn-group float-end">
+
         <button
-          class="btn btn-outline-primary"
+          v-if="post.status == 2"
+          class="btn btn-outline-primary align-items-center p-0"
           @click.prevent="() => (showHelp = true)"
         >
-          <span class="badge rounded-pill text-bg-primary">i</span>
+          <span class="align-top h1"> Ⓘ</span>
         </button>
+      </h3>
+      <div class="btn-group float-end">
         <button
           @click.prevent="deletePost"
           class="btn btn-danger"
@@ -103,6 +105,15 @@
                     Chargement {{ thumbProgress }}
                   </button>
                 </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Résumé</label>
+                <textarea
+                  v-model="post.abstract"
+                  :disabled="isClosed"
+                  rows="5"
+                  class="col-12"
+                ></textarea>
               </div>
               <div class="mb-3">
                 <label class="form-label">Expiration</label>
@@ -266,22 +277,22 @@
         </div>
       </div>
     </div>
+    <modal
+      id="help orga"
+      :show="showHelp"
+      title="Aide Organisations"
+      :resolve="() => (showHelp = false)"
+    >
+      <div class="row">
+        <p>
+          Afin de limiter le poid du site, chaque organisation (individuelle ou
+          non) n'a le droit d'avoir qu'une seule annonce à l'état de brouillon.
+          Vous devez compléter et publier (ou supprimier) l'annonce brouillon
+          afin d'en créer une nouvelle.
+        </p>
+      </div>
+    </modal>
   </div>
-  <modal
-    id="help orga"
-    :show="showHelp"
-    title="Aide Organisations"
-    :resolve="() => (showHelp = false)"
-  >
-    <div class="row">
-      <p>
-        Afin de limiter le poid du site, chaque organisation (individuelle ou
-        non) n'a le droit d'avoir qu'une seule annonce à l'état de brouillon.
-        Vous devez compléter et publier (ou supprimier) l'annonce brouillon afin
-        d'en créer une nouvelle.
-      </p>
-    </div>
-  </modal>
 </template>
 <script setup>
 import { onBeforeMount, ref, computed, inject } from "vue";
