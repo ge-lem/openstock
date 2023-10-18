@@ -58,6 +58,7 @@
           <div>
             <h5>Description</h5>
           </div>
+          <markdown :description="post.abstract" />
           <markdown :description="post.description" />
         </div>
       </div>
