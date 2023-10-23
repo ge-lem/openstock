@@ -62,50 +62,39 @@
         <div class="card-body">
           <div class="row">
             <div class="col">
-              <ul class="list-group">
-                <li v-for="p in posts" :key="p.id" class="list-group-item">
-                  <div class="row">
-                    <div class="col col-3">
-                      <router-link
-                        v-if="p.thumbnail"
-                        :to="{ name: 'showpost', params: { postid: p.id } }"
-                      >
+              <ul id="searchlist" class="list-group">
+                <router-link
+                  v-for="p in posts"
+                  :key="p.id"
+                  custom
+                  v-slot="{ href, navigate }"
+                  :to="{ name: 'showpost', params: { postid: p.id } }"
+                >
+                  <li class="list-group-item" role="button" @click="navigate">
+                    <div class="row">
+                      <div class="col col-3">
                         <img
+                          v-if="p.thumbnail"
                           :src="'/media/' + p.thumbnail"
                           class="img-thumbnail img-fluid"
                           alt="thumbnail"
                         />
-                      </router-link>
-                    </div>
-                    <div class="col">
-                      <div class="d-flex justify-content-between">
-                        <h4>
-                          {{ p.is_request ? "Requête: " : "" }}{{ p.title }}
-                        </h4>
-
-                        <div class="ms-1">
-                          <router-link
-                            class="btn btn-primary"
-                            :to="{ name: 'showpost', params: { postid: p.id } }"
-                          >
-                            Consuler
-                          </router-link>
-                        </div>
                       </div>
-                      <markdown :description="p.abstract" :limit="3" />
-                      <p>
-                        <router-link
-                          :to="{
-                            name: 'showorga',
-                            params: { orgaid: p.owner },
-                          }"
-                        >
-                          {{ orgas[p.owner].name }}
-                        </router-link>
-                      </p>
+                      <div class="col">
+                        <div class="d-flex justify-content-between">
+                          <h4>
+                            <a class="text-decoration-none" :href="href">
+                              {{ p.is_request ? "Requête: " : ""
+                              }}{{ p.title }}</a
+                            >
+                          </h4>
+                        </div>
+                        <p>{{ p.abstract }}</p>
+                        <p>Organisation : {{ orgas[p.owner].name }}</p>
+                      </div>
                     </div>
-                  </div>
-                </li>
+                  </li>
+                </router-link>
               </ul>
             </div>
           </div>

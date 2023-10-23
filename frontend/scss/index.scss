@@ -167,7 +167,6 @@ $dropdown-dark-link-active-bg:      $white;
   }
 }
 
-
 .container-liquid {
   @extend .container;
 }
@@ -228,6 +227,10 @@ SVG Icons - svgicons.sparkk.fr
 .svg-icon-small {
   width: 1em;
   height: 1em;
+}
+
+#searchlist li.list-group-item:hover h4 > a {
+  color:$color-secondary;
 }
 
 @import "header";

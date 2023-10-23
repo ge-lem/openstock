@@ -29,7 +29,7 @@ class Post(models.Model):
                              related_name="posts")
     status = models.SmallIntegerField(choices=STATUS, default=DRAFT)
     title = models.CharField(max_length=60)
-    abstract = models.TextField(blank=True, default="Texte apparaissant sur la page de recherche.")
+    abstract = models.CharField(default="Texte apparaissant sur la page de recherche.", max_length=255)
     description = models.TextField(blank=True, default="Texte apparaissant que quand on clique sur l'annonce.\n")
     is_request = models.BooleanField(default=False)
     thumbnail = models.ImageField(upload_to='posts', blank=True, null=True)

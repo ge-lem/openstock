@@ -107,11 +107,12 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label class="form-label">Résumé</label>
+                <label class="form-label">Résumé (max 255 caractères)</label>
                 <textarea
                   v-model="post.abstract"
                   :disabled="isClosed"
-                  rows="5"
+                  rows="3"
+                  maxlength="255"
                   class="col-12"
                 ></textarea>
               </div>

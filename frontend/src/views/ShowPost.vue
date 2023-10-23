@@ -18,8 +18,17 @@
             <table class="table">
               <tbody>
                 <tr>
-                  <td scope="row">Propriétaire</td>
-                  <td>{{ owner.name }}</td>
+                  <td scope="row">Organisation</td>
+                  <td>
+                    <router-link
+                      :to="{
+                        name: 'showorga',
+                        params: { orgaid: owner.id },
+                      }"
+                    >
+                      {{ owner.name }}
+                    </router-link>
+                  </td>
                 </tr>
                 <tr>
                   <td scope="row">Contact</td>
@@ -58,7 +67,7 @@
           <div>
             <h5>Description</h5>
           </div>
-          <markdown :description="post.abstract" />
+          <p>{{ post.abstract }} </p>
           <markdown :description="post.description" />
         </div>
       </div>
