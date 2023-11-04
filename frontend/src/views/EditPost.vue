@@ -389,6 +389,7 @@ async function uploadThumbnail() {
     } catch (error) {
       thumbnail.value.value = null;
       thumbF.value = null;
+      thumbProgress.value = null;
       if (error.response && error.response.status == 400) {
         showMessage({
           content: "Le fichier image n'est pas valide",
@@ -424,6 +425,7 @@ async function uploadPhoto() {
     } catch (error) {
       addphotoinput.value.value = null;
       photoF.value = null;
+      photoProgress.value = null;
       if (error.response && error.response.status == 400) {
         showMessage({
           content: "Le fichier image n'est pas valide",
