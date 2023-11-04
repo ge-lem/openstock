@@ -7,7 +7,8 @@
         <button
           class="btn btn-outline-primary"
           @click.prevent="() => (showHelp = true)"
-        >Ⓘ
+        >
+          Ⓘ
         </button>
         <router-link
           class="btn btn-primary"
@@ -50,26 +51,26 @@
         </div>
       </div>
     </div>
+    <modal
+      id="help orga"
+      :show="showHelp"
+      title="Aide Organisations"
+      :resolve="() => (showHelp = false)"
+    >
+      <div class="row">
+        <p>
+          Une annonce est forcément reliée à une organisation. Toute personne
+          possède au moins une organisation qui lui est propre dont il est le
+          seul gestionnaire.
+        </p>
+        <p>
+          Cependant une personne peut également créer une organisation auquelle
+          elle peut ajouter des gestionnaires. Les gestionnaires ont les mêmes
+          droits que le propriétaire excepté celui de supprimer l'organisation.
+        </p>
+      </div>
+    </modal>
   </div>
-  <modal
-    id="help orga"
-    :show="showHelp"
-    title="Aide Organisations"
-    :resolve="() => (showHelp = false)"
-  >
-    <div class="row">
-      <p>
-        Une annonce est forcément reliée à une organisation. Toute personne
-        possède au moins une organisation qui lui est propre dont il est le seul
-        gestionnaire.
-      </p>
-      <p>
-        Cependant une personne peut également créer une organisation auquelle
-        elle peut ajouter des gestionnaires. Les gestionnaires ont les mêmes
-        droits que le propriétaire excepté celui de supprimer l'organisation.
-      </p>
-    </div>
-  </modal>
 </template>
 
 <script setup>
