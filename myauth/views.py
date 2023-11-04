@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.dispatch import receiver
@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from django.conf import settings
 
 from knox.views import LoginView as KnoxLoginView
+from knox.views import LogoutView as KnoxLogoutView
 from djoser.signals import user_registered
 
 from basic_invitations.models import Invitation
@@ -58,6 +59,12 @@ class LoginView(KnoxLoginView):
             user = serializer.validated_data['user']
             login(request, user)
         return super(LoginView, self).post(request, format=None)
+
+class LogoutView(KnoxLogoutView):
+    def post(self, request, format=None):
+        response = super(LogoutView, self).post(request, format=None)
+        logout(request)
+        return response
 
 
 class SelfView(APIView):

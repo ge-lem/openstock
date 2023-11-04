@@ -6,7 +6,7 @@ from knox import views as knox_views
 
 from rest_framework.routers import DefaultRouter
 
-from myauth.views import LoginView, UserList, SelfView
+from myauth.views import LoginView, LogoutView, UserList, SelfView
 
 router = DefaultRouter()
 router.register('users', djsoer_views.UserViewSet)
@@ -26,7 +26,7 @@ knox_urlpatterns = [
         name='knox_login'),
     path(
         r'logout/',
-        knox_views.LogoutView.as_view(),
+        LogoutView.as_view(),
         name='knox_logout'),
     path(
         r'logoutall/',
