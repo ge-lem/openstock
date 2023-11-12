@@ -91,7 +91,6 @@ onBeforeMount(async () => {
   if (localStorage.getItem("cookiepopup") == null) {
     showCookie.value = true;
   }
-  store.checkAuth();
 });
 function validCookie() {
   localStorage.setItem("cookiepopup", "true");

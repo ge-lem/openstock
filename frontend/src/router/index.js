@@ -51,6 +51,18 @@ const router = createRouter({
       component: () => import("../views/profile/ActivationView.vue"),
     },
     {
+      path: "/password/reset/",
+      name: "reset_password",
+      component: () => import("../views/profile/ResetPassword.vue"),
+      meta: { requiresNotAuth: true },
+    },
+    {
+      path: "/password/reset/confirm/:uid/:token",
+      name: "reset_password_confirm",
+      component: () => import("../views/profile/ResetPasswordConfirm.vue"),
+      meta: { requiresNotAuth: true },
+    },
+    {
       path: "/profile",
       name: "profile",
       component: () => import("../views/profile/MyProfile.vue"),
@@ -112,6 +124,11 @@ router.beforeEach(async (to) => {
       path: "/login",
       // save the location we were at to come back later
       query: { redirect: to.fullPath },
+    };
+  }
+  else if (to.meta.requiresNotAuth && store.isAuthenticated) {
+    return {
+      path: "/",
     };
   }
 });

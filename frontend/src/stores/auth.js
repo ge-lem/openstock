@@ -54,7 +54,9 @@ export const useAuthStore = defineStore("auth", () => {
       authUser.value = datauser;
     } else {
       try {
-        await login();
+        if (import.meta.env.VITE_APP_CAS_AUTH == "true") {
+          await login();
+        }
       } catch (e) {
         logout(false);
       }
@@ -100,7 +102,19 @@ export const useAuthStore = defineStore("auth", () => {
     );
     return data;
   }
-
+  async function resetPassword(email) {
+    const { data } = await ApiService.post("auth/users/reset_password", {
+      email,
+    });
+    return data;
+  }
+  async function resetPasswordConfirm(params) {
+    const { data } = await ApiService.post(
+      "auth/users/reset_password_confirm",
+      params
+    );
+    return data;
+  }
   return {
     firstCheck,
     waitFirstCheck,
@@ -118,5 +132,7 @@ export const useAuthStore = defineStore("auth", () => {
     registerUser,
     activateUser,
     resendActivate,
+    resetPassword,
+    resetPasswordConfirm,
   };
 });

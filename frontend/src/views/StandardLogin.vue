@@ -10,7 +10,7 @@
         >
           {{ error }}
         </div>
-        <form v-if="!isAuthenticated && !casAuth">
+        <form v-if="!isAuthenticated && !casAuth" ref="flogin">
           <div class="mb-3">
             <label for="inputUsername" class="form-label"
               >Nom Utilisateur</label
@@ -20,6 +20,7 @@
               v-model="username"
               class="form-control"
               id="inputUsername"
+              required
             />
           </div>
           <div class="mb-3">
@@ -29,6 +30,7 @@
               v-model="password"
               class="form-control"
               id="inputPassword1"
+              required
             />
           </div>
           <div class="mb-3">
@@ -38,6 +40,9 @@
           </div>
           <div class="mb-3">
             Pas de compte ? Demandez à un utilisateur de vous inviter.
+          </div>
+          <div class="mb-3">
+            <router-link to="password/reset">Mot de passe perdu.</router-link>
           </div>
         </form>
         <div v-if="!isAuthenticated && casAuth">
@@ -67,6 +72,7 @@ const casAuth = import.meta.env.VITE_APP_CAS_AUTH == "true";
 
 const username = ref("");
 const password = ref("");
+const flogin = ref();
 
 const errors = ref([]);
 
@@ -75,15 +81,21 @@ async function casLogin() {
 }
 
 async function login() {
-  try {
-    errors.value = [];
-    await store.login(username.value, password.value);
-  } catch (error) {
-    if (error.response.status == 400) {
-      if ("non_field_errors" in error.response.data) {
-        errors.value = error.response.data["non_field_errors"];
+  if (flogin.value.checkValidity()) {
+    try {
+      errors.value = [];
+      await store.login(username.value, password.value);
+    } catch (error) {
+      if (error.response.status == 400) {
+        if ("non_field_errors" in error.response.data) {
+          errors.value = error.response.data["non_field_errors"];
+        }
+      } else if (error.response.status == 429) {
+        errors.value = ["Trop de tentatives, réessayez demain"];
       }
     }
+  } else {
+    flogin.value.reportValidity();
   }
 }
 </script>
