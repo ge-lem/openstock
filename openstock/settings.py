@@ -168,6 +168,9 @@ DJOSER = {
     'TOKEN_MODEL': 'knox.models.AuthToken',
     'SEND_ACTIVATION_EMAIL': False,
     'USER_CREATE_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'SET_PASSWORD_RETYPE': True,
     'SERIALIZERS': {
         'current_user': 'myauth.serializers.UserSerializer',
         'user_create_password_retype': 'myauth.serializers.UserCreatePasswordRetypeSerializer',
@@ -182,6 +185,12 @@ DJOSER = {
 # If CAS auth only admin can create a user.
 if CAS_AUTH:
     DJOSER['PERMISSIONS']['user_create'] = [
+        'rest_framework.permissions.IsAdmin']
+    DJOSER['PERMISSIONS']['password_reset'] = [
+        'rest_framework.permissions.IsAdmin']
+    DJOSER['PERMISSIONS']['password_reset_confirm'] = [
+        'rest_framework.permissions.IsAdmin']
+    DJOSER['PERMISSIONS']['set_password'] = [
         'rest_framework.permissions.IsAdmin']
 
 TAGGIT_CASE_INSENSITIVE = True
