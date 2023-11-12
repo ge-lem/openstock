@@ -13,14 +13,6 @@
             >
               {{ error }}
             </div>
-            <div
-              v-for="error in errors.uid"
-              :key="error"
-              class="alert alert-danger"
-              role="alert"
-            >
-              {{ error }}
-            </div>
             <div class="mb-3">
               <label for="inputPassword1" class="form-label"
                 >Nouveau mot de passe</label
@@ -99,6 +91,7 @@ const errors = reactive({
   password_mismatch: [],
   non_field_errors: [],
   uid: [],
+  token: [],
 });
 function resetErrors() {
   errors.new_password = [];
@@ -106,6 +99,7 @@ function resetErrors() {
   errors.password_mismatch = [];
   errors.non_field_errors = [];
   errors.uid = [];
+  errors.token = [];
 }
 async function resetPassword() {
   try {
@@ -114,13 +108,12 @@ async function resetPassword() {
     isSent.value = true;
   } catch (error) {
     if (error.response.status == 400) {
-      console.log(error.response);
       for (const prop in error.response.data) {
         errors[prop] = error.response.data[prop];
       }
-    } else if (error.response.status == 401) {
-      errors.non_field_errors.push("Vous devez avoir une invitation valide");
-      console.log("Invitation failed");
+      errors.non_field_errors = errors.non_field_errors
+        .concat(errors.uid)
+        .concat(errors.token);
     }
   }
 }
