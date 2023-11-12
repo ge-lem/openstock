@@ -68,7 +68,7 @@
             </div>
           </form>
         </div>
-        <div>
+        <div v-else>
           <span class="text-center fs-3"
             >Votre mot de passe est modifié vous pouvez vous connecter.
           </span>
