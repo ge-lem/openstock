@@ -283,7 +283,7 @@ const publicPath = import.meta.env.BASE_URL;
 const userroutes = [
   {
     to: { name: "profile" },
-    label: "Profile",
+    label: "Profil",
   },
   {
     to: { name: "myposts" },

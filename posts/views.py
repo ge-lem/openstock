@@ -132,9 +132,7 @@ class PostViewSet(mixins.ListModelMixin,
         return posts
 
     def get_permissions(self):
-        if self.action in ['destroy']:
-            permission_classes = [IsAdminUser]
-        elif self.action == 'retrieve':
+        if self.action in ['retrieve']:
             permission_classes = [IsAuthenticated, IsOwnerOrOpen]
         else:
             permission_classes = [IsAdminOrIsOwner, IsAuthenticated]

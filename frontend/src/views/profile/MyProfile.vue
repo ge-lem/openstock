@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <h3>Votre profile</h3>
+      <h3>Votre profil</h3>
     </div>
     <div class="card-body">
       <div class="row">
@@ -138,7 +138,7 @@ async function updateUserButton() {
   try {
     resetErrors();
     await updateUser(tempValue);
-    showModal({ content: "Profile mis à jour" });
+    showModal({ content: "Profil mis à jour" });
   } catch (error) {
     if (error.response.status == 400) {
       for (const prop in error.response.data) {
