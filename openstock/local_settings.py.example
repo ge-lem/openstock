@@ -7,6 +7,9 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
 ]
 
+NEWPOST_TITLE = "Nouvelle annonce"
+NEWPOST_LIFESPAN = 30
+
 #If true use CAS+ldap auth instead of standard auth
 #VITE_APP_CAS_AUTH in frontend/.env must be consistent
 CAS_AUTH=False

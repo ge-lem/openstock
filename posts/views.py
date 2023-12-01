@@ -236,7 +236,7 @@ class PostViewSet(mixins.ListModelMixin,
                 status=Post.DRAFT,
                 owner=orga,
                 title=settings.NEWPOST_TITLE,
-                expire_date=timezone.now().date() + timedelta(days=30),
+                expire_date=timezone.now().date() + timedelta(days=settings.NEWPOST_LIFESPAN),
                 update_user=request.user
             )
         return Response(PostSerializer(post).data,
