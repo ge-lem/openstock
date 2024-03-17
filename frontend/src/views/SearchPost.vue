@@ -126,7 +126,6 @@ import useSearchStorage from "@/helpers/useSearchStorage";
 
 import Multiselect from "@vueform/multiselect";
 import Pagination from "@/components/ui/ListPagination.vue";
-import Markdown from "@/components/ui/MarkdownComponent.vue";
 
 const orgaStore = useOrgaStore();
 const { fetchOrgas } = orgaStore;
@@ -181,7 +180,7 @@ useSearchStorage(
   "search",
   refresh,
   { orga, searchInput, tagsInput, dateOrder, typePost },
-  currentPage
+  currentPage,
 );
 
 const orgas = ref({});
@@ -198,7 +197,7 @@ onBeforeMount(async () => {
     {},
     ...orgasList.value.map((x) => {
       return { [x.id]: x };
-    })
+    }),
   );
   await refresh();
   loading.value = false;

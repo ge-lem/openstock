@@ -10,26 +10,26 @@ const router = createRouter({
       name: "home",
       component: HomeView,
     },
-  {
-    path: "/contact",
-    name: "contact",
-    component: () => import("../views/ContactPage.vue"),
-  },
-  {
-    path: "/credits",
-    name: "credits",
-    component: () => import("../views/CreditsPage.vue"),
-  },
-  {
-    path: "/datapolicy",
-    name: "datapolicy",
-    component: () => import("../views/DataPolicy.vue"),
-  },
-  {
-    path: "/legalnotice",
-    name: "legalnotice",
-    component: () => import("../views/LegalNotice.vue"),
-  },
+    {
+      path: "/contact",
+      name: "contact",
+      component: () => import("../views/ContactPage.vue"),
+    },
+    {
+      path: "/credits",
+      name: "credits",
+      component: () => import("../views/CreditsPage.vue"),
+    },
+    {
+      path: "/datapolicy",
+      name: "datapolicy",
+      component: () => import("../views/DataPolicy.vue"),
+    },
+    {
+      path: "/legalnotice",
+      name: "legalnotice",
+      component: () => import("../views/LegalNotice.vue"),
+    },
     {
       path: "/login",
       name: "login",
@@ -125,8 +125,7 @@ router.beforeEach(async (to) => {
       // save the location we were at to come back later
       query: { redirect: to.fullPath },
     };
-  }
-  else if (to.meta.requiresNotAuth && store.isAuthenticated) {
+  } else if (to.meta.requiresNotAuth && store.isAuthenticated) {
     return {
       path: "/",
     };

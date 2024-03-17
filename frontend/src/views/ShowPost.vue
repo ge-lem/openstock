@@ -67,7 +67,7 @@
           <div>
             <h5>Description</h5>
           </div>
-          <p>{{ post.abstract }} </p>
+          <p>{{ post.abstract }}</p>
           <markdown :description="post.description" />
         </div>
       </div>

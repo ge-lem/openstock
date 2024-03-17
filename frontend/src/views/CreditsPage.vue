@@ -7,14 +7,14 @@
       <div class="os-page-content">
         <h3>Conception du site</h3>
         <p><strong>Réalisation :</strong> Nom</p>
-        <p><strong>Contenus :</strong> </p>
+        <p><strong>Contenus :</strong></p>
         <p>
           <strong>Conception graphique :</strong>
         </p>
         <h3>Outils de gestion et d'administration du site</h3>
         <p>
-          <strong>Gestion des contenus :</strong> ce site fonctionne avec
-          les outils Django et VusJs.
+          <strong>Gestion des contenus :</strong> ce site fonctionne avec les
+          outils Django et VusJs.
         </p>
         <p>
           <strong>Gestion des cookies :</strong>

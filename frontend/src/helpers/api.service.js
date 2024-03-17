@@ -35,7 +35,7 @@ const ApiService = {
           headers: { "Content-Type": "multipart/form-data" },
           onUploadProgress: function (progressEvent) {
             onProgressCB(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              Math.round((progressEvent.loaded * 100) / progressEvent.total),
             );
           },
         };

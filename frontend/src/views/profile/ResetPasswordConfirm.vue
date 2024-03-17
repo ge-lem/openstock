@@ -72,16 +72,12 @@
 </template>
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
+import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 const store = useAuthStore();
-const { isAuthenticated } = storeToRefs(store);
 
 const route = useRoute();
-const router = useRouter();
 
-const failed = ref(false);
 const isSent = ref(false);
 
 let infos = {};

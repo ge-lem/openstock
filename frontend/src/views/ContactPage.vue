@@ -2,8 +2,8 @@
   <div class="container text-justify p-4 col-lg-8 offset-lg-2">
     <main class="row">
       <h1 class="os-page-title">Contact</h1>
-      <PartageTools/>
-      
+      <PartageTools />
+
       <div class="os-page-content">
         <p>
           <strong>Structure</strong><br />
@@ -11,13 +11,11 @@
           99999 Ville<br />
         </p>
         <p>
-          <a href="mailto:contact@exemple.fr"
-            >contact@exemple</a
-          >
+          <a href="mailto:contact@exemple.fr">contact@exemple</a>
         </p>
       </div>
 
-      <PartageTools/>
+      <PartageTools />
       <footer class="os-page-date">
         <div>
           <p>

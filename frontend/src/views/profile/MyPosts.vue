@@ -166,7 +166,7 @@ onBeforeMount(async () => {
     ...listOrgas.map((x) => {
       if (x.isIndividual) x.name = "Personnelle";
       return { [x.id]: x };
-    })
+    }),
   );
   await refresh();
   loading.value = false;

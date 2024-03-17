@@ -207,7 +207,6 @@ class PostViewSet(mixins.ListModelMixin,
             photo = PhotoPost.objects.get(post=post, image=url)
             if photo:
                 photo.delete()
-                photo.image.delete(save=False)
                 return Response({"photo " + url + " deleted"},
                                 status=status.HTTP_200_OK)
         except KeyError:

@@ -19,12 +19,12 @@ export default function useSearchStorage(name, refresh, defaults, currentPage) {
     if ("_set" in defaults[key])
       defaults[key]._set(
         ssGetOrDefault(name + "_" + key, defaults[key].value),
-        true
+        true,
       );
     else
       defaults[key].value = ssGetOrDefault(
         name + "_" + key,
-        defaults[key].value
+        defaults[key].value,
       );
     setWatch(key, defaults[key]);
     refs.push(defaults[key]);

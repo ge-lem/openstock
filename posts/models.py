@@ -1,8 +1,11 @@
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
 from django.contrib.auth import get_user_model
 from taggit.managers import TaggableManager
 
 from basic_organizations.models import Organization
+
 
 class PhotoPost(models.Model):
     post = models.ForeignKey('Post', on_delete=models.CASCADE,
@@ -42,3 +45,14 @@ class Post(models.Model):
     
     def __str__(self):
         return str(self.title)
+
+
+@receiver(pre_delete, sender=PhotoPost)
+def photopost_delete(sender, instance, **kwargs):
+    instance.image.delete(False)
+
+@receiver(pre_delete, sender=Post)
+def post_delete(sender, instance, **kwargs):
+    instance.thumbnail.delete(False)
+
+

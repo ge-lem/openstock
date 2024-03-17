@@ -56,7 +56,7 @@ export const usePostStore = defineStore("posts", () => {
     const { data } = await ApiService.postFile(
       "posts/" + postid + "/update_thumbnail",
       file,
-      onProgressCB
+      onProgressCB,
     );
     return data.url;
   }
@@ -64,7 +64,7 @@ export const usePostStore = defineStore("posts", () => {
     const { data } = await ApiService.postFile(
       "posts/" + postid + "/add_photo",
       file,
-      onProgressCB
+      onProgressCB,
     );
     return data.url;
   }

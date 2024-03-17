@@ -1,7 +1,8 @@
 <template>
-<component :is="isNav ? 'li' : 'div'"
+  <component
+    :is="isNav ? 'li' : 'div'"
     ref="root"
-    :class="{ 'nav-item': isNav, 'dropdown': isNav, 'btn-group':!isNav }"
+    :class="{ 'nav-item': isNav, dropdown: isNav, 'btn-group': !isNav }"
     role="group"
     @focusout="hide"
   >
@@ -13,13 +14,13 @@
       data-bs-toggle="dropdown"
       aria-expanded="false"
       @click.prevent="toogle"
-    ><slot>{{ label }}</slot></a
+      ><slot>{{ label }}</slot></a
     >
     <ul
       :id="'tooltip' + uid"
       class="dropdown-menu"
-      :class="{ show: show, 'dropdown-menu-dark':isBlack }"
-      :style="(show && absolute) ? style : ''"
+      :class="{ show: show, 'dropdown-menu-dark': isBlack }"
+      :style="show && absolute ? style : ''"
     >
       <li v-for="item in items" :key="item.label">
         <router-link
@@ -79,8 +80,12 @@ const props = defineProps({
 const uid = uuidv4();
 const show = ref(false);
 
-const style = computed(()=>
-  "position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, "+root.value.clientHeight+"px);");
+const style = computed(
+  () =>
+    "position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, " +
+    root.value.clientHeight +
+    "px);",
+);
 
 const toogle = function () {
   show.value = !show.value;
@@ -98,5 +103,5 @@ const goto = function (event, navigate) {
 const click = function (item) {
   show.value = false;
   item.click();
-}
+};
 </script>

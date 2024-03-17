@@ -7,11 +7,11 @@
       <div class="os-page-content">
         <h3>Politique de confidentialité</h3>
         <p>
-          LA STRUCTURE, dont le siège social est situé ADRESSE, en sa qualité de responsable du
-          traitement, s'engage à ce que les traitements de données personnelles
-          effectués sur les sites internet et intranet qu’elle héberge, soient
-          conformes au règlement général sur la protection des données (RGPD) et
-          à la loi Informatique et Libertés.
+          LA STRUCTURE, dont le siège social est situé ADRESSE, en sa qualité de
+          responsable du traitement, s'engage à ce que les traitements de
+          données personnelles effectués sur les sites internet et intranet
+          qu’elle héberge, soient conformes au règlement général sur la
+          protection des données (RGPD) et à la loi Informatique et Libertés.
         </p>
         <ol>
           <li>Les données que nous collectons</li>
@@ -23,8 +23,9 @@
         </ol>
         <h3>1. Les données que nous collectons</h3>
         <p>
-          En utilisant les sites internet et intranet de LA STRUCTURE, vous êtes amenés à nous transmettre des informations, dont
-          certaines sont de nature à vous identifier :
+          En utilisant les sites internet et intranet de LA STRUCTURE, vous êtes
+          amenés à nous transmettre des informations, dont certaines sont de
+          nature à vous identifier :
         </p>
         <h4>Données des formulaires</h4>
         <p>
@@ -56,7 +57,8 @@
           <li>
             <p>
               les destinataires de vos données sont les services communication
-              et informatique ainsi que les personnels autorisés de LA STRUCTURE.
+              et informatique ainsi que les personnels autorisés de LA
+              STRUCTURE.
             </p>
           </li>
           <li>
@@ -67,7 +69,7 @@
           <li>
             vos données peuvent être collectées par des tiers (réseaux sociaux
             et plateformes de vidéos) pour des finalités qui leur sont propres,
-            conformément à leur politique de confidentialité. LA STRUCTURE n’a 
+            conformément à leur politique de confidentialité. LA STRUCTURE n’a
             pas le contrôle sur ces cookies tiers.
           </li>
         </ul>
@@ -93,11 +95,10 @@
           Nous prenons des mesures adéquates sur le plan de la technique et de
           l’organisation pour interdire l’accès non autorisé ou la modification,
           divulgation, perte ou destruction de vos données. A cet effet, le
-          sites bénéficient d’une connexion
-          sécurisée de type « SSL » qui crypte et protège les données lors de
-          leur transmission sur le réseau internet. Aussi, l’accès à vos données
-          personnelles et à leur traitement est limité aux seules personnes
-          autorisées.
+          sites bénéficient d’une connexion sécurisée de type « SSL » qui crypte
+          et protège les données lors de leur transmission sur le réseau
+          internet. Aussi, l’accès à vos données personnelles et à leur
+          traitement est limité aux seules personnes autorisées.
         </p>
         <h3>6. Quels sont vos droits sur vos données ?</h3>
         <p>
@@ -121,7 +122,8 @@
         </ul>
         <p>
           En cas de contestation légitime non satisfaite, vous pouvez introduire
-          une réclamation auprès d'une autorité de contrôle (voir <a href="cnil.fr">cnil.fr</a>).
+          une réclamation auprès d'une autorité de contrôle (voir
+          <a href="cnil.fr">cnil.fr</a>).
         </p>
       </div>
 

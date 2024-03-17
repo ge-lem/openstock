@@ -101,7 +101,7 @@ const startPage = computed(() => {
 const endPage = computed(() => {
   return Math.min(
     startPage.value + props.maxVisibleButtons - 1,
-    totalPages.value
+    totalPages.value,
   );
 });
 const pages = computed(() => {

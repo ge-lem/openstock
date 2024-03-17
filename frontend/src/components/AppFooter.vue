@@ -6,10 +6,7 @@
           <div class="col-10">
             <div class="row">
               <div class="col-12 col-sm-8 col-md-4">
-                <div
-                  id="os-theme-contact-address"
-                  class="contact-address"
-                >
+                <div id="os-theme-contact-address" class="contact-address">
                   <p>
                     LA STRUCTURE<br />
                     ADRESSE<br />
@@ -19,28 +16,18 @@
               <div
                 class="col-12 col-sm-4 col-md-4 d-flex justify-content-md-center"
               >
-                <nav
-                  role="navigation"
-                >
-                  <h2
-                    class="visually-hidden"
-                  >
-                    Menu footer
-                  </h2>
+                <nav role="navigation">
+                  <h2 class="visually-hidden">Menu footer</h2>
 
                   <ul class="list-unstyled">
                     <li>
                       <a href="/"> {{ title }} </a>
                     </li>
                     <li>
-                      <router-link to="/contact">
-                        Contact
-                      </router-link>
+                      <router-link to="/contact"> Contact </router-link>
                     </li>
                     <li>
-                      <router-link to="/credits">
-                        Credits
-                      </router-link>
+                      <router-link to="/credits"> Credits </router-link>
                     </li>
                     <li>
                       <router-link to="/legalnotice">
@@ -58,7 +45,12 @@
             </div>
           </div>
           <div class="col-2">
-            <a href="#" @click.prevent="backToTop()" class="back-to-top" title="Back to top">
+            <a
+              href="#"
+              @click.prevent="backToTop()"
+              class="back-to-top"
+              title="Back to top"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"

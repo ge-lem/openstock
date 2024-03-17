@@ -327,7 +327,7 @@ const loading = ref(true);
 const isDraft = computed(() => post.value.status == 2);
 const isOpen = computed(() => post.value.status == 3);
 const isClosed = computed(
-  () => post.value.status == 4 || post.value.status == 5
+  () => post.value.status == 4 || post.value.status == 5,
 );
 
 const statusDict = ref({
@@ -346,7 +346,7 @@ function checkImageName(file) {
     const filename = file.name.toLowerCase();
     if (
       [".png", ".jpg", ".jpeg", ".tiff", ".bmp"].some((char) =>
-        filename.endsWith(char)
+        filename.endsWith(char),
       )
     )
       return true;
@@ -380,7 +380,7 @@ async function uploadThumbnail() {
       const url = await postStore.updateThumbnail(
         post.value.id,
         thumbF.value,
-        thumbOnProgressCB
+        thumbOnProgressCB,
       );
       post.value.thumbnail = url;
       thumbnail.value.value = null;
@@ -416,7 +416,7 @@ async function uploadPhoto() {
       const url = await postStore.addPhoto(
         post.value.id,
         photoF.value,
-        photoOnProgressCB
+        photoOnProgressCB,
       );
       post.value.photos.push(url);
       addphotoinput.value.value = null;

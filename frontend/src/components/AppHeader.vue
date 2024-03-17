@@ -23,7 +23,7 @@
             >
               <span class="btn-label">{{ authUser.username }}</span>
             </Dropdown>
-             <router-link
+            <router-link
               v-else
               active-class="active"
               class="btn btn-primary"
@@ -91,25 +91,29 @@
               </li>
 
               <template v-else>
-              <li v-if="isAuthenticated" class="nav-item" role="presentation">
-                <router-link
-                  active-class="active"
-                  class="nav-link"
-                  exact
-                  :to="{ name: 'search' }"
+                <li v-if="isAuthenticated" class="nav-item" role="presentation">
+                  <router-link
+                    active-class="active"
+                    class="nav-link"
+                    exact
+                    :to="{ name: 'search' }"
+                  >
+                    Annonces
+                  </router-link>
+                </li>
+                <li
+                  v-if="orgas.length == 1"
+                  class="nav-item"
+                  role="presentation"
                 >
-                  Annonces
-                </router-link>
-              </li>
-              <li v-if="orgas.length == 1" class="nav-item" role="presentation">
-                <a class="nav-link" href="#" @click.prevent="newPost()"
-                  >Ajouter une annonce</a
-                >
-              </li>
-              <Dropdown v-else :items="orgas" isNav>
-                <span class="btn-label">Ajouter une annonce</span>
-              </Dropdown>
-            </template>
+                  <a class="nav-link" href="#" @click.prevent="newPost()"
+                    >Ajouter une annonce</a
+                  >
+                </li>
+                <Dropdown v-else :items="orgas" isNav>
+                  <span class="btn-label">Ajouter une annonce</span>
+                </Dropdown>
+              </template>
             </ul>
           </div>
         </div>
@@ -226,7 +230,7 @@
           :class="{ show: profileCollapse }"
         >
           <ul class="nav navbar-nav ps-4">
-            <li v-for="route in userroutes" class="nav-item">
+            <li v-for="route in userroutes" :key="route.to" class="nav-item">
               <router-link
                 v-if="route.to"
                 active-class="active"
@@ -236,11 +240,7 @@
               >
                 {{ route.label }}
               </router-link>
-              <a v-else 
-                href=""
-                class="nav-link"
-                @click.prevent="route.click()"
-              >
+              <a v-else href="" class="nav-link" @click.prevent="route.click()">
                 {{ route.label }}
               </a>
             </li>
@@ -304,23 +304,11 @@ const userroutes = [
 const menuCollapse = ref(false);
 const profileCollapse = ref(false);
 
-const collapsed = ref("collapse navbar-collapse");
-function collapse() {
-  /*
-    Emulate bootstrap collapse menu
-  */
-  if (collapsed.value == "collapse navbar-collapse") {
-    collapsed.value = "navbar-collapse";
-  } else {
-    collapsed.value = "collapse navbar-collapse";
-  }
-}
-
 const store = useAuthStore();
 const { isAuthenticated, authUser } = storeToRefs(store);
 
 function logout() {
-  console.log("LOGOUT")
+  console.log("LOGOUT");
   store.logout();
   orgas.value = [];
   router.push("/");
@@ -340,14 +328,15 @@ async function newPost(orga) {
 }
 
 async function refreshAuth() {
+  function callNew(v) {
+    newPost(v);
+  }
   if (isAuthenticated.value) {
     const orgaImp = await import("@/stores/orgas");
     orgaStore = orgaImp.useOrgaStore();
     const postImp = await import("@/stores/posts");
     postStore = postImp.usePostStore();
-    function callNew(v) {
-      newPost(v);
-    }
+
     orgas.value = (
       await orgaStore.fetchOrgas({ userid: authUser.value.id })
     ).map((o) => {

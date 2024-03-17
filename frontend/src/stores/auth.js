@@ -12,7 +12,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const isAuthenticated = computed(() => authUser.value != null);
   const isStaff = computed(
-    () => authUser.value && authUser.value.is_staff != null
+    () => authUser.value && authUser.value.is_staff != null,
   );
 
   async function login(username, password) {
@@ -98,7 +98,7 @@ export const useAuthStore = defineStore("auth", () => {
   async function resendActivate(params) {
     const { data } = await ApiService.post(
       "auth/users/resend_activation",
-      params
+      params,
     );
     return data;
   }
@@ -111,7 +111,7 @@ export const useAuthStore = defineStore("auth", () => {
   async function resetPasswordConfirm(params) {
     const { data } = await ApiService.post(
       "auth/users/reset_password_confirm",
-      params
+      params,
     );
     return data;
   }
