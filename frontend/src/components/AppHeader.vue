@@ -140,16 +140,18 @@
               <use href="#burger" />
             </svg>
             <span class="btn-label"> Menu </span>
-          </label>
-          <a
+            </label>
+            <router-link
             v-if="!isAuthenticated"
-            class="navbar-toggler collapsed btn btn-primary"
-            href="/cas/login"
-          >
+              active-class="active"
+              class="navbar-toggler collapsed btn btn-primary"
+              exact
+              :to="{ name: 'login' }"
+            >
             <svg class="svg-icon">
               <use href="#profile" />
             </svg>
-            <span class="btn-label">Login</span></a
+            <span class="btn-label">Login</span></router-link
           >
           <label
             v-if="isAuthenticated"
@@ -180,16 +182,19 @@
           :class="{ show: menuCollapse }"
         >
           <ul class="nav navbar-nav">
-            <li v-if="!isAuthenticated" class="nav-item">
+            <template v-if="!isAuthenticated">
+            <li class="nav-item">
               <router-link
                 active-class="active"
                 class="nav-link"
                 exact
                 :to="{ name: 'home' }"
               >
-                Matos
+                {{ title }}
               </router-link>
             </li>
+            </template>
+            <template v-else>
             <li class="nav-item" role="presentation">
               <router-link
                 active-class="active"
@@ -215,6 +220,7 @@
             >
               <span class="btn-label">Ajouter une annonce</span>
             </Dropdown>
+            </template>
           </ul>
         </div>
 

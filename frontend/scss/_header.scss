@@ -64,18 +64,18 @@
 
   .site-logo {
     img {
-      width: auto;
+      width: 100%;
       max-height: 65px;
       @include media-breakpoint-only(sm) {
-        width: auto;
+        width: 100%;
         max-height: 95px;
       }
       @include media-breakpoint-only(md) {
-        width: auto;
+        width: 100%;
         max-height: 95px;
       }
       @include media-breakpoint-up(lg) {
-        width: auto;
+        width: 100%;
         max-height: 95px;
       }
     }
@@ -242,7 +242,7 @@
       }
     }
   }
-  span.btn-label {
+  label span.btn-label {
     display: none;
     @include media-breakpoint-up(sm) {
       display: inline-flex;
