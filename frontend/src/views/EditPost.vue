@@ -160,6 +160,7 @@
                   :create-option="true"
                   :options="tags"
                   :disabled="isClosed"
+                  :onCreate="addTag"
                 />
               </div>
               <div class="mb-3">
@@ -338,6 +339,13 @@ const statusDict = ref({
 });
 
 const tags = ref([]);
+
+function addTag(option,select){
+  let newtags =  option.value.toLowerCase().replace(' ',',').split(',');
+  tags.value.push(...newtags);
+  post.value.tags.push(...newtags);
+  return false;
+}
 
 const editForm = ref();
 
