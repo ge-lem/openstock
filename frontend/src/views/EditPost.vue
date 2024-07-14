@@ -53,11 +53,12 @@
                 >
               </div>
               <div class="mb-3">
-                <label class="form-label">Titre</label
+                <label class="form-label">Titre (max 60 caractères)</label
                 ><input
                   class="form-control"
                   type="title"
                   v-model="post.title"
+                  maxlength="60"
                   required
                 />
               </div>

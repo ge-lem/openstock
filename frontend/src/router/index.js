@@ -110,6 +110,12 @@ const router = createRouter({
       component: () => import("../views/orgas/ShowOrga.vue"),
       meta: { requiresAuth: true },
     },
+    {
+      path: "/orgas",
+      name: "listorgas",
+      component: () => import("../views/orgas/ListOrgas.vue"),
+      meta: { requiresAuth: true },
+    },
   ],
 });
 router.beforeEach(async (to) => {

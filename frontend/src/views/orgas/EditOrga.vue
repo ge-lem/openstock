@@ -18,11 +18,12 @@
         <div class="col">
           <form ref="editForm" class="form needs-validation">
             <div class="mb-3">
-              <label class="form-label">Nom</label
+              <label class="form-label">Nom (max 60 caractères)</label
               ><input
                 v-model="orga.name"
                 class="form-control"
                 type="text"
+                maxlength="60"
                 required
                 @input="errors.name = []"
                 :class="{ 'is-invalid': errors.name.length }"

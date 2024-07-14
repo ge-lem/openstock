@@ -91,7 +91,7 @@
               </li>
 
               <template v-else>
-                <li v-if="isAuthenticated" class="nav-item" role="presentation">
+                <li class="nav-item" role="presentation">
                   <router-link
                     active-class="active"
                     class="nav-link"
@@ -99,6 +99,16 @@
                     :to="{ name: 'search' }"
                   >
                     Annonces
+                  </router-link>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <router-link
+                    active-class="active"
+                    class="nav-link"
+                    exact
+                    :to="{ name: 'listorgas' }"
+                  >
+                    Organisations
                   </router-link>
                 </li>
                 <li
@@ -204,7 +214,17 @@
               >
                 Annonces
               </router-link>
-            </li>
+              </li>
+              <li class="nav-item" role="presentation">
+                  <router-link
+                    active-class="active"
+                    class="nav-link"
+                    exact
+                    :to="{ name: 'listorgas' }"
+                  >
+                    Organisations
+                  </router-link>
+                </li>
             <li v-if="orgas.length == 1" class="nav-item" role="presentation">
               <a class="nav-link" href="#" @click.prevent="newPost()"
                 >Ajouter une annonce</a
