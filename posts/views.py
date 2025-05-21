@@ -296,8 +296,9 @@ class SearchPostViewSet(mixins.ListModelMixin,
         if search is not None:
             searchQ = (Q(title__icontains=search) |
                        Q(description__icontains=search))
-            posts = posts.filter(searchQ).distinct()
+            posts = posts.filter(searchQ)
         if tags is not None:
-            posts = posts.filter(tags__name__in=tags.split(","))
+            for t in tags.split(","):
+                posts = posts.filter(tags__name__in=[t])
 
-        return posts
+        return posts.distinct()
