@@ -54,6 +54,11 @@ npm run build
 Si vous utilisez un reverse proxy type nginx, les deux dossiers à servir en statique sont `staticfiles` et `media`
 
 
+Si vous utiliser LDAP
+```
+sudo apt-get install libsasl2-dev libldap2-dev libssl-dev
+pip install django-auth-ldap
+```
 ### Licensing
 
 The source code is licensed under GPL v3. License is available [here](/LICENSE).

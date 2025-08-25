@@ -1,6 +1,10 @@
 import ldap
 from django_auth_ldap.config import LDAPSearch
 
+SITE_URL = "https://example.fr"
+NOTIFICATION_SENDER = 'example@example.fr'
+NOTIFICATION_REPLYTO = ['noreply@example.fr']
+
 ALLOWED_HOSTS = []
 CORS_ALLOWED_ORIGINS = [
 ]

@@ -6,6 +6,14 @@
     <div class="card-body">
       <form class="row row-cols-lg-auto g-3 align-items-center">
         <span>Filtres</span>
+        <div class="col-auto">
+          <input
+            v-model="searchInput"
+            class="form-control"
+            type="search"
+            placeholder="Search"
+          />
+        </div>
         <div class="col-12">
           <label class="form-label visually-hidden" for="select-orga"
             >Oraganisations</label
@@ -107,6 +115,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useOrgaStore } from "@/stores/orgas";
 import { usePostStore } from "@/stores/posts";
 import useSearchStorage from "@/helpers/useSearchStorage";
+import useDebouncedRef from "@/helpers/useDebouncedRef";
 import Pagination from "@/components/ui/ListPagination.vue";
 
 const { authUser } = storeToRefs(useAuthStore());
@@ -118,6 +127,7 @@ const { posts, totalCount } = storeToRefs(postStore);
 const { fetchPosts } = postStore;
 
 const loading = ref(true);
+const searchInput = useDebouncedRef("");
 const orga = ref("");
 const status = ref("");
 const dateOrder = ref("e");
@@ -135,7 +145,8 @@ function onPageChange(page) {
 async function refresh() {
   let paramsDefault = {};
   paramsDefault["order"] = dateOrder.value;
-
+  paramsDefault["search"] = searchInput.value;
+  
   if (orga.value) {
     paramsDefault["orga"] = orga.value;
   }
@@ -155,7 +166,7 @@ const statusDict = ref({
   5: "Expirée",
 });
 
-useSearchStorage("myposts", refresh, { orga, status, dateOrder }, currentPage);
+useSearchStorage("myposts", refresh, { search: searchInput, orga, status, dateOrder }, currentPage);
 
 const orgas = ref({});
 

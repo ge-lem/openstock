@@ -43,7 +43,6 @@ CORS_ALLOW_CREDENTIALS = True
 
 
 
-
 # Application definition
 
 INSTALLED_APPS = [

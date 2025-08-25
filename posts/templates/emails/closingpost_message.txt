@@ -1,0 +1,6 @@
+Attention votre annonce "{{  post.title  }}" vient d'expirée.
+Elle sera supprimée définitivement dans 30 jours !
+
+{{ SITE_URL }}/post/{{ post.id }}
+
+Ce mail est automatique, veuillez ne pas y répondre directement.
