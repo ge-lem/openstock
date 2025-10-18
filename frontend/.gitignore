@@ -17,6 +17,7 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 src/assets/css/bs_*
+src/views/PostFooter.vue
 
 # Editor directories and files
 .vscode/*

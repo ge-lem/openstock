@@ -240,6 +240,7 @@
             v-model:showHelp="showHelpMark"
             :description="post.description"
           />
+          <PostFooter/>
         </div>
         <div class="row mt-3">
           <div class="col">
@@ -308,6 +309,7 @@ import { useOrgaStore } from "@/stores/orgas";
 import { usePostStore } from "@/stores/posts";
 import Multiselect from "@vueform/multiselect";
 import Markdown from "@/components/ui/MarkdownComponent.vue";
+import PostFooter from "@/views/PostFooter.vue";
 
 const showMessage = inject("show");
 

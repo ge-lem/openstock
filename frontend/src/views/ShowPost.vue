@@ -69,6 +69,7 @@
           </div>
           <p>{{ post.abstract }}</p>
           <markdown :description="post.description" />
+          <PostFooter/>
         </div>
       </div>
       <div class="row">
@@ -119,6 +120,7 @@ import { usePostStore } from "@/stores/posts";
 
 import Markdown from "@/components/ui/MarkdownComponent.vue";
 import Modal from "@/plugins/modal";
+import PostFooter from "@/views/PostFooter.vue";
 
 const { authUser } = storeToRefs(useAuthStore());
 const orgaStore = useOrgaStore();
