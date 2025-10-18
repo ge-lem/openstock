@@ -97,6 +97,26 @@
             </button>
           </div>
         </form>
+        <div class="col">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Envoyée</th>
+                  <th>Acceptée</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="invit in invits" :key="invit.id">
+                  <td>{{ invit.email }}</td>
+                  <td>{{ invit.sent }}</td>
+                  <td>{{ invit.accepted ? "Oui":"Non"}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -115,7 +135,10 @@ const casAuth = import.meta.env.VITE_APP_CAS_AUTH == "true";
 
 const tempValue = reactive({ first_name: "testsss", last_name: "", email: "" });
 
-onBeforeMount(() => {
+const invits = ref([]);
+
+onBeforeMount(async () => {
+  invits.value = (await authStore.listInvits())
   tempValue.first_name = authUser.value.first_name;
   tempValue.last_name = authUser.value.last_name;
   tempValue.email = authUser.value.email;

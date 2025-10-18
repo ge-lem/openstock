@@ -84,8 +84,12 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function inviteUser(email) {
-    const { data } = await ApiService.post("invitation/send", { email });
+    const { data } = await ApiService.post("invitations/send", { email });
     return data;
+  }
+  async function listInvits() {
+    const { data } = await ApiService.get("invitations");
+    return data.results;
   }
   async function registerUser(params) {
     const { data } = await ApiService.post("auth/users", params);
@@ -129,6 +133,7 @@ export const useAuthStore = defineStore("auth", () => {
     searchUsers,
     getUser,
     inviteUser,
+    listInvits,
     registerUser,
     activateUser,
     resendActivate,

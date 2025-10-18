@@ -39,7 +39,7 @@ urlpatterns = [
         'api/',
         include('posts.urls')),
     path(
-        'api/invitation/',
+        'api/',
         include('basic_invitations.urls')),
     re_path(
         '^.*$',

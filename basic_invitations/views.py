@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
+from rest_framework import viewsets, mixins
 from rest_framework.exceptions import PermissionDenied
 from .serializers import CreateInvitationSerializer
 from .models import Invitation
+from .serializers import InvitationSerializer
 from .app_settings import app_settings
 
 class SendInvitationView(APIView):
@@ -25,3 +27,10 @@ class SendInvitationView(APIView):
         invite.save()
         invite.send_invitation(request)
         return Response("Invitation sent to "+serializer.validated_data['email'])
+
+class InvitationViewSet(viewsets.GenericViewSet,
+                            mixins.ListModelMixin,):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = InvitationSerializer
+    def get_queryset(self):
+        return Invitation.objects.filter(inviter=self.request.user)
