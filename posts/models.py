@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from taggit.managers import TaggableManager
 
 from basic_organizations.models import Organization
+from .app_settings import app_settings
 
 
 class PhotoPost(models.Model):
@@ -32,8 +33,8 @@ class Post(models.Model):
                              related_name="posts")
     status = models.SmallIntegerField(choices=STATUS, default=DRAFT)
     title = models.CharField(max_length=60)
-    abstract = models.CharField(default="Texte apparaissant sur la page de recherche.", max_length=255)
-    description = models.TextField(blank=True, default="Texte apparaissant que quand on clique sur l'annonce.\n")
+    abstract = models.CharField(default=app_settings.DEFAULT_ABSTRACT, max_length=255)
+    description = models.TextField(blank=True, default=app_settings.DEFAULT_DESCRIPTION)
     is_request = models.BooleanField(default=False)
     thumbnail = models.ImageField(upload_to='posts', blank=True, null=True)
     create_date = models.DateField(auto_now_add=True)
