@@ -45,7 +45,7 @@ import { useAuthStore } from "@/stores/auth";
 const store = useAuthStore();
 const { isAuthenticated } = storeToRefs(store);
 
-const casAuth = import.meta.env.VITE_APP_CAS_AUTH == "true";
+const casAuth = import.meta.env.VITE_CAS_AUTH == "true";
 
 const email = ref("");
 

@@ -73,7 +73,7 @@ export const usePostStore = defineStore("posts", () => {
     return url;
   }
   async function fetchTags() {
-    const { data } = await ApiService.get("posts/tags");
+    const { data } = await ApiService.get("posts/search/tags");
     return data;
   }
   return {

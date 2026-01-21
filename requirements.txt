@@ -9,3 +9,4 @@ Pillow~=11.3
 django-auth-ldap~=5.2
 django-cas-ng~=5.0
 djoser~=2.3.3
+django-environ~=0.12.0

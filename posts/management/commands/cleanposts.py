@@ -19,7 +19,7 @@ class Command(BaseCommand):
         #close expired posts
 
         expposts=Post.objects.filter(status=3).filter(expire_date__lt=timezone.now())
-        for post in exposts:
+        for post in expposts:
             context = { 'SITE_URL': settings.SITE_URL, 'post': post }
             subject = render_to_string(
                 template_name='emails/closingpost_subject.txt',

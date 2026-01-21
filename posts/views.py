@@ -21,7 +21,7 @@ from taggit.models import Tag
 
 from basic_organizations.models import Organization
 from posts.models import Post, PhotoPost
-from posts.serializers import PostSerializer
+from posts.serializers import PostSerializer, PostPublicSerializer
 
 # Create your views here.
 
@@ -249,22 +249,25 @@ class PostViewSet(mixins.ListModelMixin,
         return Response(dict((x, y) for x, y in Post.STATUS),
                         status=status.HTTP_200_OK)
 
-    @action(methods=['get'], detail=False)
-    def tags(self, request):
-        """
-        Return list of all tags
-        """
-        return Response([x.name for x in Tag.objects.all()],
-                        status=status.HTTP_200_OK)
-
 
 class SearchPostViewSet(mixins.ListModelMixin,
                         mixins.RetrieveModelMixin,
                         viewsets.GenericViewSet):
 
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    permissions = [IsAuthenticated,]
+    def get_serializer_class(self):
+        
+        if self.request.user.is_authenticated:
+            return PostSerializer
+        else:
+            return PostPublicSerializer
+
+            
+    def get_permissions(self):
+        if settings.PUBLIC_SEARCH and self.action in ['list', 'tags']:
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated,]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         posts = Post.objects.filter(status=Post.OPEN)
@@ -302,3 +305,13 @@ class SearchPostViewSet(mixins.ListModelMixin,
                 posts = posts.filter(tags__name__in=[t])
 
         return posts.distinct()
+
+    @action(methods=['get'], detail=False)
+    def tags(self, request):
+        """
+        Return list of all tags
+        """
+        return Response([x.name for x in Tag.objects.all()],
+                        status=status.HTTP_200_OK)
+
+

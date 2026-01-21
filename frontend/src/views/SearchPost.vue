@@ -21,7 +21,7 @@
                 :options="tags"
               />
             </div>
-            <div class="mb-3">
+            <div v-if="isAuthenticated" class="mb-3">
               <label class="form-label">Organisations</label>
               <Multiselect
                 v-model="orga"
@@ -90,7 +90,7 @@
                           </h4>
                         </div>
                         <p>{{ p.abstract }}</p>
-                        <p>Organisation : {{ orgas[p.owner].name }}</p>
+                        <p v-if="isAuthenticated" >Organisation : {{ orgas[p.owner].name }}</p>
                       </div>
                     </div>
                   </li>
@@ -119,6 +119,7 @@ import { onBeforeMount, ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import useDebouncedRef from "@/helpers/useDebouncedRef";
 
+import { useAuthStore } from "@/stores/auth";
 import { useOrgaStore } from "@/stores/orgas";
 import { usePostStore } from "@/stores/posts";
 
@@ -126,6 +127,9 @@ import useSearchStorage from "@/helpers/useSearchStorage";
 
 import Multiselect from "@vueform/multiselect";
 import Pagination from "@/components/ui/ListPagination.vue";
+
+const store = useAuthStore();
+const { isAuthenticated } = storeToRefs(store);
 
 const orgaStore = useOrgaStore();
 const { fetchOrgas } = orgaStore;
@@ -188,11 +192,14 @@ const orgasList = ref([]);
 
 onBeforeMount(async () => {
   tags.value = await postStore.fetchTags();
-  orgasList.value = (await fetchOrgas()).sort((a, b) => {
-    if (a.isIndividual && !b.isIndividual) return 1;
-    else if (!a.isIndividual && b.isIndividual) return -1;
-    else return 0;
-  });
+  if(isAuthenticated.value)
+  {
+    orgasList.value = (await fetchOrgas()).sort((a, b) => {
+      if (a.isIndividual && !b.isIndividual) return 1;
+      else if (!a.isIndividual && b.isIndividual) return -1;
+      else return 0;
+    });
+  }
   orgas.value = Object.assign(
     {},
     ...orgasList.value.map((x) => {

@@ -24,3 +24,19 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
                   'thumbnail', 'photos', 'create_date',
                   'expire_date', 'quantity', 'update_date', 'update_user']
         read_only_fields = ('create_date','update_date', 'update_user')
+
+class PostPublicSerializer(TaggitSerializer, serializers.ModelSerializer):
+    """
+    Serializer for Post objects.
+    """
+    thumbnail = serializers.StringRelatedField(
+        read_only=True,
+     )
+    tags = TagListSerializerField()
+
+
+    class Meta:
+        model = Post
+        fields = ['id', 'tags', 'title',
+                  'abstract', 'is_request',
+                  'thumbnail']                  

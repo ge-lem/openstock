@@ -79,7 +79,8 @@
             style=""
           >
             <ul class="nav navbar-nav">
-              <li v-if="!isAuthenticated" class="nav-item">
+              <template v-if="!isAuthenticated">
+              <li  class="nav-item">
                 <router-link
                   active-class="active"
                   class="nav-link"
@@ -89,7 +90,17 @@
                   {{ title }}
                 </router-link>
               </li>
-
+              <li v-if="publicSearch" class="nav-item" role="presentation">
+              <router-link
+                active-class="active"
+                class="nav-link"
+                exact
+                :to="{ name: 'search' }"
+              >
+                Annonces
+              </router-link>
+              </li>
+              </template>
               <template v-else>
                 <li class="nav-item" role="presentation">
                   <router-link
@@ -203,6 +214,16 @@
                 {{ title }}
               </router-link>
             </li>
+            <li v-if="publicSearch" class="nav-item" role="presentation">
+              <router-link
+                active-class="active"
+                class="nav-link"
+                exact
+                :to="{ name: 'search' }"
+              >
+                Annonces
+              </router-link>
+            </li>
             </template>
             <template v-else>
             <li class="nav-item" role="presentation">
@@ -304,6 +325,7 @@ import { useAuthStore } from "@/stores/auth";
 import Dropdown from "@/components/ui/RouteDropdown.vue";
 
 const title = import.meta.env.VITE_APP_TITLE;
+const publicSearch = import.meta.env.VITE_PUBLIC_SEARCH;
 const publicPath = import.meta.env.BASE_URL;
 
 const userroutes = [

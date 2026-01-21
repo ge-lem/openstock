@@ -36,7 +36,7 @@ export const useAuthStore = defineStore("auth", () => {
     ApiService.setToken(null);
     authUser.value = null;
     localStorage.removeItem("authToken");
-    if (send && import.meta.env.VITE_APP_CAS_AUTH == "true") {
+    if (send && import.meta.env.VITE_CAS_AUTH == "true") {
       window.location = import.meta.env.VITE_APP_API_URL + "auth/cas/logout/";
     }
   }
@@ -54,7 +54,7 @@ export const useAuthStore = defineStore("auth", () => {
       authUser.value = datauser;
     } else {
       try {
-        if (import.meta.env.VITE_APP_CAS_AUTH == "true") {
+        if (import.meta.env.VITE_CAS_AUTH == "true") {
           await login();
         }
       } catch (e) {

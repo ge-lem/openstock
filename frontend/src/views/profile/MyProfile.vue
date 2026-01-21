@@ -131,7 +131,7 @@ const { updateUser } = authStore;
 
 const showModal = inject("show");
 
-const casAuth = import.meta.env.VITE_APP_CAS_AUTH == "true";
+const casAuth = import.meta.env.VITE_CAS_AUTH == "true";
 
 const tempValue = reactive({ first_name: "testsss", last_name: "", email: "" });
 

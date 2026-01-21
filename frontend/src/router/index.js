@@ -84,7 +84,7 @@ const router = createRouter({
       path: "/search",
       name: "search",
       component: () => import("../views/SearchPost.vue"),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: !import.meta.env.VITE_PUBLIC_SEARCH },
     },
     {
       path: "/post/:postid",
