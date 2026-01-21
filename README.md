@@ -31,6 +31,7 @@ Il est possible de retirer la date d'expiration mais cela n'est pas conseillé. 
 A executer dans le dossier du dépot
 ```
 # configurer un environement virtuel python
+cp .env.local.example .env.local
 cp openstock/local_settings.py.example openstock/local_settings.py
 edit openstock/local_settings.py
 edit openstock/settings.py
