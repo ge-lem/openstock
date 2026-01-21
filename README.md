@@ -41,7 +41,7 @@ python manage.py migrate
 # if not CAS authentication, create first user
 python manage.py createsuperuser
 
-
+./init.sh
 cd frontend
 edit .env
 edit src/views/HomeView.vue
