@@ -30,8 +30,8 @@ else:
 
 try:
     from .local_settings import *
-except ImportError:
-    print('error import local settings')
+except ImportError as err:
+    print('error import local settings', err)
 
 if DEBUG == False :
     SESSION_COOKIE_SECURE=True
