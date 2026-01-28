@@ -28,7 +28,7 @@
                 :searchable="true"
                 label="name"
                 valueProp="id"
-                :options="orgasList"
+                :options="orgas"
                 :limit="3"
                 :minChars="3"
               />
@@ -90,7 +90,7 @@
                           </h4>
                         </div>
                         <p>{{ p.abstract }}</p>
-                        <p v-if="isAuthenticated" >Organisation : {{ orgas[p.owner].name }}</p>
+                        <p v-if="isAuthenticated" >Organisation : {{ orgasDict[p.owner].name }}</p>
                       </div>
                     </div>
                   </li>
@@ -132,7 +132,7 @@ const store = useAuthStore();
 const { isAuthenticated } = storeToRefs(store);
 
 const orgaStore = useOrgaStore();
-const { orgas, orgasList } = storeToRefs(orgaStore);
+const { orgas, orgasDict } = storeToRefs(orgaStore);
 const { fetchOrgas } = orgaStore;
 
 const postStore = usePostStore();

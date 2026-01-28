@@ -5,7 +5,8 @@ import ApiService from "@/helpers/api.service";
 export const useOrgaStore = defineStore("orgas", () => {
   const orgas = ref([]);
   const totalCount = ref([]);
-  const orgasList = computed(()=>Object.values(orgas.value))
+  const orgasDict = computed(()=>{let dic = {};
+    orgas.value.map((o)=>{dic[o.id]=o})return dic})
 
   async function fetchOrgas(params) {
     const { data } = await ApiService.query("orgas", params);
@@ -32,7 +33,7 @@ export const useOrgaStore = defineStore("orgas", () => {
 
   return {
     orgas,
-    orgasList,
+    orgasDict,
     totalCount,
     fetchOrgas,
     getOrga,
