@@ -8,15 +8,6 @@ from django.contrib.auth import get_user_model
 # Create your tests here.
 
 class OrganizationTests(APITestCase):
-    def test_organisation_autocreate(self):
-        User = get_user_model()
-        u = User.objects.create_user("testuser", "test@example.fr","fakepass")
-        self.assertIs(Organization.objects.all().count(),1)
-        o = Organization.objects.all().first()
-        self.assertEqual(o.name,u.username)
-        self.assertEqual(o.contact,u.email)
-        self.assertIs(o.isIndividual,True)
-        self.assertEqual(o.owner,u)
 
     def test_anonymous(self):
         User = get_user_model()

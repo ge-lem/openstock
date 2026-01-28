@@ -132,6 +132,7 @@ const store = useAuthStore();
 const { isAuthenticated } = storeToRefs(store);
 
 const orgaStore = useOrgaStore();
+const { orgas, orgasList } = storeToRefs(orgaStore);
 const { fetchOrgas } = orgaStore;
 
 const postStore = usePostStore();
@@ -187,25 +188,12 @@ useSearchStorage(
   currentPage,
 );
 
-const orgas = ref({});
-const orgasList = ref([]);
-
 onBeforeMount(async () => {
   tags.value = await postStore.fetchTags();
   if(isAuthenticated.value)
   {
-    orgasList.value = (await fetchOrgas()).sort((a, b) => {
-      if (a.isIndividual && !b.isIndividual) return 1;
-      else if (!a.isIndividual && b.isIndividual) return -1;
-      else return 0;
-    });
+    await fetchOrgas()
   }
-  orgas.value = Object.assign(
-    {},
-    ...orgasList.value.map((x) => {
-      return { [x.id]: x };
-    }),
-  );
   await refresh();
   loading.value = false;
 });

@@ -123,7 +123,7 @@
                   </router-link>
                 </li>
                 <li
-                  v-if="orgas.length == 1"
+                  v-if="orgas.length <= 1"
                   class="nav-item"
                   role="presentation"
                 >
@@ -246,7 +246,7 @@
                     Organisations
                   </router-link>
                 </li>
-            <li v-if="orgas.length == 1" class="nav-item" role="presentation">
+            <li v-if="orgas.length <= 1" class="nav-item" role="presentation">
               <a class="nav-link" href="#" @click.prevent="newPost()"
                 >Ajouter une annonce</a
               >
@@ -321,6 +321,7 @@
 import { onBeforeMount, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
+import { useRoute } from 'vue-router'
 import { useAuthStore } from "@/stores/auth";
 import Dropdown from "@/components/ui/RouteDropdown.vue";
 
@@ -367,42 +368,55 @@ let postStore = null;
 const orgas = ref([]);
 
 const router = useRouter();
+const route = useRoute();
+
 async function newPost(orga) {
   if (!orga) {
-    orga = orgas.value.find((o) => o.isIndividual);
+    if(orgas.value.length==1)
+    { 
+      orga=orgas.value[0];
+    }
+    else
+    {
+    router.push({ name: "myorgas", query:{help:true}});
+    return
+    }
   }
   const newpost = await postStore.getNewPost({ orga: orga.id });
   router.push({ name: "editpost", params: { postid: newpost.id } });
 }
 
-async function refreshAuth() {
+async function refreshOrgas() {
   function callNew(v) {
     newPost(v);
   }
-  if (isAuthenticated.value) {
-    const orgaImp = await import("@/stores/orgas");
-    orgaStore = orgaImp.useOrgaStore();
-    const postImp = await import("@/stores/posts");
-    postStore = postImp.usePostStore();
-
-    orgas.value = (
+  orgas.value = (
       await orgaStore.fetchOrgas({ userid: authUser.value.id })
     ).map((o) => {
-      if (o.isIndividual) o.label = "Personnelle";
-      else o.label = o.name;
+      o.label = o.name;
       o.click = () => {
         callNew(o);
       };
       return o;
     });
+}
+async function refreshAuth() {
+  if (isAuthenticated.value) {
+    const orgaImp = await import("@/stores/orgas");
+    orgaStore = orgaImp.useOrgaStore();
+    const postImp = await import("@/stores/posts");
+    postStore = postImp.usePostStore();
+    await refreshOrgas();
   } else {
     console.log("not imported");
   }
 }
 
 watch(isAuthenticated, async () => {
-  console.log("auth watch");
   refreshAuth();
+});
+watch(route, async (r) => {
+  if(r.name=="myorgas") refreshOrgas()
 });
 
 onBeforeMount(async () => {

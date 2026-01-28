@@ -120,6 +120,7 @@ import Pagination from "@/components/ui/ListPagination.vue";
 
 const { authUser } = storeToRefs(useAuthStore());
 const orgaStore = useOrgaStore();
+const { orgas } = storeToRefs(orgaStore);
 const { fetchOrgas } = orgaStore;
 
 const postStore = usePostStore();
@@ -168,17 +169,9 @@ const statusDict = ref({
 
 useSearchStorage("myposts", refresh, { search: searchInput, orga, status, dateOrder }, currentPage);
 
-const orgas = ref({});
 
 onBeforeMount(async () => {
   let listOrgas = await fetchOrgas({ userid: authUser.value.id });
-  orgas.value = Object.assign(
-    {},
-    ...listOrgas.map((x) => {
-      if (x.isIndividual) x.name = "Personnelle";
-      return { [x.id]: x };
-    }),
-  );
   await refresh();
   loading.value = false;
 });

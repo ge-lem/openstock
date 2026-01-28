@@ -19,14 +19,14 @@
           <div>
             <h5>Description</h5>
           </div>
-          <markdown :description="desc" />
+          <markdown :description="orga.description" />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, computed, onBeforeMount } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { useOrgaStore } from "@/stores/orgas";
 import { useRouter, useRoute } from "vue-router";
 import Markdown from "@/components/ui/MarkdownComponent.vue";
@@ -39,11 +39,6 @@ const router = useRouter();
 const orgaStore = useOrgaStore();
 const { getOrga } = orgaStore;
 
-const desc = computed(() => {
-  if (orga.value.isIndividual)
-    return "Organisation individuelle de " + orga.value.name;
-  else return orga.value.description;
-});
 
 onBeforeMount(async () => {
   try {

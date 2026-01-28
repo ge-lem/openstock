@@ -20,8 +20,6 @@ class OrganizationPermission(permissions.BasePermission):
     DELETE owner of the organization
     """
     def has_object_permission(self, request, view, obj):
-        if obj.isIndividual and request.method not in permissions.SAFE_METHODS:
-            return False
         if request.user.is_staff:
             return True
         isowner = False
@@ -47,11 +45,6 @@ class OrganizationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         orgas = Organization.objects.all()
-        
-        indiv = self.request.query_params.get('indiv', None)
-        if indiv is not None:
-            indiv = indiv == 'true'
-            orgas = orgas.filter(isIndividual=indiv)
         
         userid = self.request.query_params.get('userid', None)
         if(userid is not None):

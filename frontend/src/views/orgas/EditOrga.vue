@@ -140,7 +140,6 @@ const orga = ref({
   description: "",
   managers: [],
   contact: "",
-  isIndividual: false,
   owner: authUser.id,
 });
 
@@ -211,7 +210,6 @@ onBeforeMount(async () => {
   if (!isNew.value) {
     try {
       orga.value = await getOrga(route.params["orgaid"]);
-      if (orga.value.isIndividual) router.push({ name: "myorgas" });
     } catch (error) {
       router.push({ name: "myorgas" });
     }

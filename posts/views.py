@@ -15,7 +15,7 @@ from rest_framework.parsers import (MultiPartParser,
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, NotFound
 
 from taggit.models import Tag
 
@@ -215,15 +215,16 @@ class PostViewSet(mixins.ListModelMixin,
     @action(methods=['get'], detail=False)
     def get_new(self, request):
         orgaid = self.request.query_params.get('orga', None)
-        orgaI = self.request.user.myorganizations.filter(
-            isIndividual=True).get()
-        orga = orgaI
+        orga = None
         if orgaid is not None:
             try:
                 orga = Organization.objects.filter(Q(managers__in=[self.request.user]) | Q(
                     owner=self.request.user)).get(pk=orgaid)
             except Organization.DoesNotExist:
                 pass
+        if orga is None:
+            raise NotFound()
+
         post = None
         posts = Post.objects.filter(
             status=Post.DRAFT,

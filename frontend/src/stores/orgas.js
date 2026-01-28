@@ -1,10 +1,11 @@
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import ApiService from "@/helpers/api.service";
 
 export const useOrgaStore = defineStore("orgas", () => {
   const orgas = ref([]);
   const totalCount = ref([]);
+  const orgasList = computed(()=>Object.values(orgas.value))
 
   async function fetchOrgas(params) {
     const { data } = await ApiService.query("orgas", params);
@@ -31,6 +32,7 @@ export const useOrgaStore = defineStore("orgas", () => {
 
   return {
     orgas,
+    orgasList,
     totalCount,
     fetchOrgas,
     getOrga,

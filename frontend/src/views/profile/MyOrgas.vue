@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <h3 class="float-start">Mes organisations</h3>
+      <h3 class="float-start">Mes organisations </h3>
 
       <div class="btn-group float-end">
         <button
@@ -31,11 +31,10 @@
               </thead>
               <tbody>
                 <tr v-for="orga in orgas" :key="orga.id">
-                  <td>{{ orga.isIndividual ? "Individuelle" : orga.name }}</td>
+                  <td>{{ orga.name }}</td>
                   <td>{{ orga.contact }}</td>
                   <td>
                     <router-link
-                      v-if="!orga.isIndividual"
                       class="btn btn-primary"
                       :to="{ name: 'editorga', params: { orgaid: orga.id } }"
                     >
@@ -59,14 +58,10 @@
     >
       <div class="row">
         <p>
-          Une annonce est forcément reliée à une organisation. Toute personne
-          possède au moins une organisation qui lui est propre dont il est le
-          seul gestionnaire.
+          Une annonce est forcément reliée à une organisation. Vous devez, soit créer votre oragnisation, soit demander à rejoindre une organisation, pour pouvoir poster une annonce.
         </p>
         <p>
-          Cependant une personne peut également créer une organisation auquelle
-          elle peut ajouter des gestionnaires. Les gestionnaires ont les mêmes
-          droits que le propriétaire excepté celui de supprimer l'organisation.
+          Si vous créez un organisation vous pourrez y ajouter des gestionnaires. Les gestionnaires ont les mêmes droits que le propriétaire, excepté celui de supprimer l'organisation.
         </p>
       </div>
     </modal>
@@ -76,6 +71,7 @@
 <script setup>
 import { ref, onBeforeMount } from "vue";
 import { storeToRefs } from "pinia";
+import { useRoute } from 'vue-router'
 import Modal from "@/plugins/modal";
 import { useAuthStore } from "@/stores/auth";
 import { useOrgaStore } from "@/stores/orgas";
@@ -83,22 +79,20 @@ const { authUser } = storeToRefs(useAuthStore());
 const orgaStore = useOrgaStore();
 const { fetchOrgas } = orgaStore;
 
-const showHelp = ref(false);
+const route = useRoute()
+const showHelp = ref(route.query.help=="true");
 
 const orgas = ref([]);
 onBeforeMount(async () => {
   orgas.value = (await fetchOrgas({ userid: authUser.value.id })).sort(
     (a, b) => {
-      if (a.isIndividual) return -1;
-      else if (
+      if (
         a.owner == authUser.value &&
-        !b.isIndividual &&
         b.owner != authUser.value
       )
         return -1;
       else if (
         b.owner == authUser.value &&
-        !a.isIndividual &&
         a.owner != authUser.value
       )
         return 1;
