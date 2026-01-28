@@ -70,7 +70,7 @@
                   }"
                 >
                   <td>{{ p.is_request ? "Requête: " : "" }}{{ p.title }}</td>
-                  <td>{{ orgas[p.owner].name }}</td>
+                  <td>{{ orgasDict[p.owner].name }}</td>
                   <td>{{ statusDict[p.status] }}</td>
                   <td>{{ p.expire_date }}</td>
                   <td>{{ p.quantity }}</td>
@@ -120,7 +120,7 @@ import Pagination from "@/components/ui/ListPagination.vue";
 
 const { authUser } = storeToRefs(useAuthStore());
 const orgaStore = useOrgaStore();
-const { orgas } = storeToRefs(orgaStore);
+const { orgas, orgasDict } = storeToRefs(orgaStore);
 const { fetchOrgas } = orgaStore;
 
 const postStore = usePostStore();
