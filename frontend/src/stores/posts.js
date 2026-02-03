@@ -13,6 +13,12 @@ export const usePostStore = defineStore("posts", () => {
     totalCount.value = data.count;
     return posts.value;
   }
+  async function createPosts(params) {
+    const { data } = await ApiService.post("posts/import", params);
+    posts.value = data.results;
+    totalCount.value = data.count;
+    return posts.value;
+  }
   async function searchPosts(params) {
     const { data } = await ApiService.query("posts/search", params);
     posts.value = data.results;
@@ -90,5 +96,6 @@ export const usePostStore = defineStore("posts", () => {
     addPhoto,
     deletePhoto,
     fetchTags,
+    createPosts,
   };
 });
