@@ -271,7 +271,7 @@ class SearchPostViewSet(mixins.ListModelMixin,
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
-        posts = Post.objects.filter(status=Post.OPEN)
+        posts = Post.objects
         search = self.request.query_params.get('search', None)
         tags = self.request.query_params.get('tags', None)
         orgaid = self.request.query_params.get('orga', None)
@@ -305,7 +305,8 @@ class SearchPostViewSet(mixins.ListModelMixin,
             for t in tags.split(","):
                 posts = posts.filter(tags__name__in=[t])
 
-        return posts.distinct()
+        visibilityCheck = lambda p: IsOwnerOrOpen().has_object_permission(self.request, self, p)
+        return list(filter(visibilityCheck, posts.distinct()))
 
     @action(methods=['get'], detail=False)
     def tags(self, request):
