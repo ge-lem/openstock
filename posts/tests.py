@@ -52,3 +52,74 @@ class DraftVisibilityTests(APITestCase):
         response = self.client.get(url)
         self.client.logout()
         assert self.specificDraftContent not in str(response.content)
+
+class OrgCommentTests(APITestCase):
+    secretComment = "Visible only to org members"
+
+    def setUp(self):
+        self.user1InOrg = User.objects.create_user(username="user1inOrg", password="password")
+        org = OrganizationSerializer().create({'owner': self.user1InOrg, 'name': "org"})
+        org.managers.add(self.user1InOrg)
+        self.user2InOrg = User.objects.create_user("user2inOrg", "password")
+        org.managers.add(self.user2InOrg)
+        org.save()
+        self.user3NotInOrg = User.objects.create_user("user3notInOrg", "password")
+        self.post = Post.objects.create(
+                status=Post.OPEN,
+                owner=org,
+                title="new post",
+                expire_date=timezone.now().date() + timedelta(days=1),
+                update_user=self.user1InOrg,
+                org_comment=self.secretComment
+            )
+
+    def test_OrgCommentsVisibleSinglePost(self):
+        url = reverse("post-detail", args=[self.post.id])
+        response = self.client.get(url)
+        assert self.secretComment not in str(response.content)
+        self.client.force_login(self.user1InOrg)
+        response = self.client.get(url)
+        self.client.logout()
+        assert self.secretComment in str(response.content)
+        self.client.force_login(self.user2InOrg)
+        response = self.client.get(url)
+        self.client.logout()
+        assert self.secretComment in str(response.content)
+        self.client.force_login(self.user3NotInOrg)
+        response = self.client.get(url)
+        self.client.logout()
+        assert self.secretComment not in str(response.content)
+
+    def test_OrgCommentsVisiblePostsList(self):
+        url = reverse("post-list")
+        response = self.client.get(url)
+        assert self.secretComment not in str(response.content)
+        self.client.force_login(self.user1InOrg)
+        response = self.client.get(url)
+        self.client.logout()
+        assert self.secretComment in str(response.content)
+        self.client.force_login(self.user2InOrg)
+        response = self.client.get(url)
+        self.client.logout()
+        assert self.secretComment in str(response.content)
+        self.client.force_login(self.user3NotInOrg)
+        response = self.client.get(url)
+        self.client.logout()
+        assert self.secretComment not in str(response.content)
+
+    def test_OrgCommentsVisiblePostsSearch(self):
+        url = reverse("searchpost-list")
+        response = self.client.get(url)
+        assert self.secretComment not in str(response.content)
+        self.client.force_login(self.user1InOrg)
+        response = self.client.get(url)
+        self.client.logout()
+        assert self.secretComment in str(response.content)
+        self.client.force_login(self.user2InOrg)
+        response = self.client.get(url)
+        self.client.logout()
+        assert self.secretComment in str(response.content)
+        self.client.force_login(self.user3NotInOrg)
+        response = self.client.get(url)
+        self.client.logout()
+        assert self.secretComment not in str(response.content)

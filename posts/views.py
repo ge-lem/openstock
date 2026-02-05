@@ -81,6 +81,19 @@ class IsOwnerOrOpen(permissions.BasePermission):
             request.user == obj.owner.owner) or (
             request.user in obj.owner.managers.all())
         return request.user.is_staff or ismanager or obj.status == Post.OPEN
+    
+class IsOwner(permissions.BasePermission):
+    """
+    Permission checking if user is admin or if the object belongs
+    to an organization for which the current user is owner or manager.
+    The object field must be 'user'
+    """
+
+    def has_object_permission(self, request, view, obj):
+        ismanager = (
+            request.user == obj.owner.owner) or (
+            request.user in obj.owner.managers.all())
+        return request.user.is_staff or ismanager
 
 
 class PostViewSet(mixins.ListModelMixin,
@@ -129,7 +142,17 @@ class PostViewSet(mixins.ListModelMixin,
                 posts = posts.filter(tags__name__in=tags.split(","))
         elif (self.action == 'retrieve'):
             posts = Post.objects.all()
+
+        for post in posts:
+            if not IsOwner().has_object_permission(self.request, self, post):
+                post.org_comment = None
         return posts
+
+    def get_object(self):
+        res = super().get_object()
+        if not IsOwner().has_object_permission(self.request, self, res):
+            res.org_comment = None
+        return res
 
     def get_permissions(self):
         if self.action in ['retrieve']:
@@ -305,8 +328,12 @@ class SearchPostViewSet(mixins.ListModelMixin,
             for t in tags.split(","):
                 posts = posts.filter(tags__name__in=[t])
 
+        posts = posts.distinct()
+        for post in posts:
+            if not IsOwner().has_object_permission(self.request, self, post):
+                post.org_comment = None
         visibilityCheck = lambda p: IsOwnerOrOpen().has_object_permission(self.request, self, p)
-        return list(filter(visibilityCheck, posts.distinct()))
+        return list(filter(visibilityCheck, posts))
 
     @action(methods=['get'], detail=False)
     def tags(self, request):

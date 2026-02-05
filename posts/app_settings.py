@@ -14,6 +14,11 @@ class AppSettings:
         return self._setting("DEFAULT_DESCRIPTION", "Texte apparaissant que quand la personne clique sur l'annonce.\n")
 
     @property
+    def DEFAULT_ORG_COMMENT(self):
+        """Default text for the internal organization comment on post"""
+        return self._setting("DEFAULT_ORG_COMMENT", "Commentaire visible seulement des membres de l'organisation.\n")
+
+    @property
     def DEFAULT_ABSTRACT(self):
         """Default text for the post abstract"""
         return self._setting("DEFAULT_ABSTRACT", "Texte apparaissant sur la page de recherche.")

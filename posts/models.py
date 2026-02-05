@@ -35,6 +35,7 @@ class Post(models.Model):
     title = models.CharField(max_length=60)
     abstract = models.CharField(default=app_settings.DEFAULT_ABSTRACT, max_length=255)
     description = models.TextField(blank=True, default=app_settings.DEFAULT_DESCRIPTION)
+    org_comment = models.TextField(blank=True, default=app_settings.DEFAULT_ORG_COMMENT)
     is_request = models.BooleanField(default=False)
     thumbnail = models.ImageField(upload_to='posts', blank=True, null=True)
     create_date = models.DateField(auto_now_add=True)
