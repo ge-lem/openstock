@@ -85,7 +85,7 @@
                           <h4>
                             <a class="text-decoration-none" :href="href">
                               {{ p.is_request ? "Requête: " : ""
-                              }}{{ p.title }}</a
+                              }}{{ p.title }} {{ p.status == 2 ? "(Brouillon privé à l'organisation)" : ""}}</a
                             >
                           </h4>
                         </div>
