@@ -99,6 +99,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/importposts",
+      name: "importposts",
+      component: () => import("../views/ImportPosts.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/editorga/:orgaid",
       name: "editorga",
       component: () => import("../views/orgas/EditOrga.vue"),
