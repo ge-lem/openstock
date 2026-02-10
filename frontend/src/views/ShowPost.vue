@@ -69,6 +69,10 @@
           </div>
           <p>{{ post.abstract }}</p>
           <markdown :description="post.description" />
+		  <div v-if="post.org_comment">
+			<h5>Commentaire aux membres de l'organisation:</h5>
+			<markdown :description="post.org_comment" />
+		  </div>
           <PostFooter/>
         </div>
       </div>

@@ -225,7 +225,7 @@
           </form>
         </div>
         <div class="col">
-          <h5>Description</h5>
+          <h6>Description</h6>
           <textarea
             v-model="post.description"
             :disabled="isClosed"
@@ -240,6 +240,20 @@
             v-model:showHelp="showHelpMark"
             :description="post.description"
           />
+		  <h5>Commentaire aux membres de l'organisation</h5>
+            <textarea
+              v-model="post.org_comment"
+              rows="5"
+              class="col-12"
+            ></textarea>
+            <a href="#" @click.prevent="showHelpMark = true"
+              >Aide au format Markdown</a
+            >
+            <h6>Aperçu</h6>
+            <markdown
+              v-model:showHelp="showHelpMark"
+              :description="post.org_comment"
+            />
           <PostFooter/>
         </div>
         <div class="row mt-3">

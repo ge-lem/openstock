@@ -20,7 +20,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'owner', 'status', 'tags', 'title',
-                  'abstract', 'description', 'is_request',
+                  'abstract', 'description', 'org_comment', 'is_request',
                   'thumbnail', 'photos', 'create_date',
                   'expire_date', 'quantity', 'update_date', 'update_user']
         read_only_fields = ('create_date','update_date', 'update_user')
