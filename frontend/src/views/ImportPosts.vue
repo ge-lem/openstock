@@ -82,6 +82,10 @@
 		  <select id="descriptionColumn" v-model="csvMapping.descriptionColumn" class="form-select" @change="updatePostsAndErrors">
 			<ColumnOptions :allColumns="allColumns" :lines="lines"/>
 		  </select>
+		  <label>Commentaire privé à l'organisation (numéro de colonne)</label>
+  		  <select id="orgCommentColumn" v-model="csvMapping.orgCommentColumn" class="form-select" @change="updatePostsAndErrors">
+  			<ColumnOptions :allColumns="allColumns" :lines="lines"/>
+  		  </select>
 		</form>
 		</div>
         <div class="col">
@@ -182,6 +186,7 @@ const csvMapping = ref({
 	expireDate: null, // column number or date or null
 	tagsColumn: NaN,
 	descriptionColumn: NaN,
+	orgCommentColumn: NaN,
 });
 watch(csvMapping, (before, after) => updatePostsAndErrors(), { deep: true });
 const allColumns = ref([]);
@@ -292,6 +297,9 @@ function toPost(line, csvMapping) {
 	}
 	if (csvMapping.descriptionColumn) {
 		post.description = line[csvMapping.descriptionColumn - 1];
+	}
+	if (csvMapping.orgCommentColumn) {
+		post.org_comment = line[csvMapping.orgCommentColumn - 1] 
 	}
 	if (csvMapping.creation_date) {
 		post.creation_date = csvMapping.creation_date;
