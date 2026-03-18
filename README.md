@@ -54,15 +54,17 @@ npm install
 npm run build
 ```
 
+A cette étape, l'intégralité de l'appli peut être servie par Django avec `python manage.py runserver` pour être accessible à http://localhost:8000 .
+
 Si vous utiliser LDAP
 ```
 sudo apt-get install libsasl2-dev libldap2-dev libssl-dev
 pip install django-auth-ldap
 ```
 
-### Tester en local
+### Développement
 
-Une fois les étapes de build ou d'installation ci-dessus effectuées, vous pouvez lancer et tester le résultat par exemple en
+Pour un développement itératifs rapide avec des mises à jour automatique de l'appli à chaque modif, une fois les étapes de build ou d'installation ci-dessus effectuées, vous pouvez lancer et tester le résultat par exemple en
 
 1. Ajoutant `http://localhost:5173` aux `CORS_ALLOWED_ORIGINS` de votre fichier `openstock/local_settings.py`
 2. Démarrant le backend sur le port 8000 avec `python manage.py runserver`
