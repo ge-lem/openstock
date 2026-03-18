@@ -58,6 +58,7 @@
       <div class="card">
         <div class="card-header">
           <h3 class="float-start">Annonces</h3>
+		  <button class="float-end" v-on:click="downloadCSV(posts)">Exporter en CSV</button>
         </div>
         <div class="card-body">
           <div class="row">
@@ -107,7 +108,7 @@
                 @pagechanged="onPageChange"
               />
             </div>
-          </div>
+		  </div>
         </div>
       </div>
     </div>
@@ -115,7 +116,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref, computed } from "vue";
+import { onBeforeMount, ref, computed, isProxy, toRaw } from "vue";
 import { storeToRefs } from "pinia";
 import useDebouncedRef from "@/helpers/useDebouncedRef";
 
@@ -127,6 +128,7 @@ import useSearchStorage from "@/helpers/useSearchStorage";
 
 import Multiselect from "@vueform/multiselect";
 import Pagination from "@/components/ui/ListPagination.vue";
+import ApiService from "@/helpers/api.service";
 
 const store = useAuthStore();
 const { isAuthenticated } = storeToRefs(store);
@@ -158,27 +160,33 @@ function onPageChange(page) {
   refresh();
 }
 
+function createSearchParams(pagination) {
+	let paramsDefault = {};
+	paramsDefault["order"] = dateOrder.value;
+	paramsDefault["type"] = typePost.value;
+
+	if (searchInput.value) {
+	  paramsDefault["search"] = searchInput.value;
+	}
+	if (orga.value) {
+	  paramsDefault["orga"] = orga.value;
+	}
+	if (dateOrder.value) {
+	  paramsDefault["order"] = dateOrder.value;
+	}
+	if (tagsInput.value.length > 0) {
+	  paramsDefault["tags"] = tagsInput.value.join();
+	}
+
+	if (pagination) {
+	  paramsDefault.limit = perPage.value;
+	  paramsDefault.offset = (currentPage.value - 1) * perPage.value;
+	}
+	return { ...paramsDefault };
+}
+
 async function refresh() {
-  let paramsDefault = {};
-  paramsDefault["order"] = dateOrder.value;
-  paramsDefault["type"] = typePost.value;
-
-  if (searchInput.value) {
-    paramsDefault["search"] = searchInput.value;
-  }
-  if (orga.value) {
-    paramsDefault["orga"] = orga.value;
-  }
-  if (dateOrder.value) {
-    paramsDefault["order"] = dateOrder.value;
-  }
-  if (tagsInput.value.length > 0) {
-    paramsDefault["tags"] = tagsInput.value.join();
-  }
-
-  paramsDefault.limit = perPage.value;
-  paramsDefault.offset = (currentPage.value - 1) * perPage.value;
-  await searchPosts({ ...paramsDefault });
+  await searchPosts(createSearchParams(true));
 }
 
 useSearchStorage(
@@ -197,5 +205,42 @@ onBeforeMount(async () => {
   await refresh();
   loading.value = false;
 });
+
+function escape(text) {
+	if (text) {
+		return text.replace("\"", "\\\"");
+	}
+	return "";
+}
+
+async function downloadCSV() {
+	const { data } = await ApiService.query("posts", createSearchParams(false));
+	let array = data.results;
+	var csv = "title,owner,abstract,description,org_comment,quantity,create_date,expire_date,tags\r\n";
+	for (var i = 0; i < array.length; i++) {
+		var post = array[i];
+		csv += '"' + escape(post.title) + "\",";
+		csv += '"' + escape(orgas.value.find(e => e.id === post.owner).name) + "\",";
+		csv += '"' + escape(post.abstract) + "\",";
+		csv += '"' + escape(post.description) + "\",";
+		csv += '"' + escape(post.org_comment) + "\",";
+		csv += '"' + (post.quantity ? post.quantity : "") + "\",";
+		csv += '"' + escape(post.create_date) + "\",";
+		csv += '"' + escape(post.expire_date) + "\",";
+		csv += '"';
+		for (var j = 0; j < post.tags.length; j++) {
+			csv += escape(post.tags[j]);
+			csv += ',';
+		}
+		csv += "\",";
+		csv += "\r\n";
+	}
+	var blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+	var url = URL.createObjectURL(blob);
+	var link = document.createElement("a");
+	link.href = url;
+	link.setAttribute("download", "export.csv");
+	link.click();
+}
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
