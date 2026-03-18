@@ -293,15 +293,15 @@ class SearchPostViewSet(mixins.ListModelMixin,
         return Response([x.name for x in Tag.objects.all()],
                         status=status.HTTP_200_OK)
 
-class ImportPostsViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
-    nested = PostViewSet()
-    parser_classes = (MultiPartParser, FormParser, JSONParser,)
-    
-    def get_serializer(self, *args, **kwargs):
-        self.nested.request = self.request
-        self.nested.format_kwarg = self.format_kwarg
-        if (self.request.method == "POST" and
-           isinstance(self.request.data, list) and
-           not "many" in kwargs):
-            return self.nested.get_serializer(many=True, *args, **kwargs)
-        return self.nested.get_serializer(*args, **kwargs)
+#class ImportPostsViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
+#    nested = PostViewSet()
+#    parser_classes = (MultiPartParser, FormParser, JSONParser,)
+#    
+#    def get_serializer(self, *args, **kwargs):
+#        self.nested.request = self.request
+#        self.nested.format_kwarg = self.format_kwarg
+#        if (self.request.method == "POST" and
+#           isinstance(self.request.data, list) and
+#           not "many" in kwargs):
+#            return self.nested.get_serializer(many=True, *args, **kwargs)
+#        return self.nested.get_serializer(*args, **kwargs)
