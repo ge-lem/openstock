@@ -3,9 +3,9 @@ from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
 from .models import Post
 
-class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
+class PostPrivateSerializer(TaggitSerializer, serializers.ModelSerializer):
     """
-    Serializer for Post objects.
+    Serializer for Post objects, include private attributes.
     """
     photos = serializers.StringRelatedField(
         many=True,
@@ -25,6 +25,29 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
                   'expire_date', 'quantity', 'update_date', 'update_user']
         read_only_fields = ('create_date','update_date', 'update_user')
 
+
+class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
+    """
+    Serializer for Post objects.
+    """
+    photos = serializers.StringRelatedField(
+        many=True,
+        read_only=True,
+     )
+    thumbnail = serializers.StringRelatedField(
+        read_only=True,
+     )
+    tags = TagListSerializerField()
+
+
+    class Meta:
+        model = Post
+        fields = ['id', 'owner', 'status', 'tags', 'title',
+                  'abstract', 'description', 'is_request',
+                  'thumbnail', 'photos', 'create_date',
+                  'expire_date', 'quantity', 'update_date', 'update_user']
+        read_only_fields = ('create_date','update_date', 'update_user')
+
 class PostPublicSerializer(TaggitSerializer, serializers.ModelSerializer):
     """
     Serializer for Post objects.
@@ -39,4 +62,4 @@ class PostPublicSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = Post
         fields = ['id', 'tags', 'title',
                   'abstract', 'is_request',
-                  'thumbnail']                  
+                  'thumbnail']     

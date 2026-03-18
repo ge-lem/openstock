@@ -172,7 +172,6 @@ const route = useRoute();
 const router = useRouter();
 
 const postStore = usePostStore();
-const post = ref(null);
 const loading = ref(true);
 
 const tags = ref([]);
@@ -192,7 +191,6 @@ watch(csvMapping, (before, after) => updatePostsAndErrors(), { deep: true });
 const allColumns = ref([]);
 
 async function updatePost(draft) {
-//  if (editForm.value.checkValidity()) {
     try {
 	  const status = draft === false ? 3 /* Open, En Cours */ : 2;
 	  const toSubmit = Object.values(posts.value);
@@ -202,9 +200,6 @@ async function updatePost(draft) {
     } catch (error) {
       console.log(error);
     }
-//  } else {
-//    editForm.value.reportValidity();
-//  }
 }
 
 var lines = [];
@@ -212,6 +207,7 @@ async function updateCSVFile(change) {
 	let file = change.target.files[0];
 	if (file) {
         Papa.parse(file, {
+            comments: "#",
             complete: function(results) {
 				lines = results.data;
 				var totalColumns = 0;
@@ -323,19 +319,7 @@ function toPost(line, csvMapping) {
 onBeforeMount(async () => {
   fetchOrgas({ userid: authUser.value.id });
   tags.value = await postStore.fetchTags();
-  try {
-    post.value = await postStore.getPost(route.params["postid"]);
-    loading.value = false;
-  } catch (error) {
-    router.push({ name: "myposts" });
-  }
-});
-onBeforeRouteUpdate(async (to) => {
-  try {
-    post.value = await postStore.getPost(to.params["postid"]);
-  } catch (error) {
-    router.push({ name: "myposts" });
-  }
+  loading.value = false;
 });
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>

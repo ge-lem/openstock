@@ -58,7 +58,6 @@
       <div class="card">
         <div class="card-header">
           <h3 class="float-start">Annonces</h3>
-		  <button class="float-end" v-on:click="downloadCSV(posts)">Exporter en CSV</button>
         </div>
         <div class="card-body">
           <div class="row">
@@ -206,41 +205,7 @@ onBeforeMount(async () => {
   loading.value = false;
 });
 
-function escape(text) {
-	if (text) {
-		return text.replace("\"", "\\\"");
-	}
-	return "";
-}
 
-async function downloadCSV() {
-	const { data } = await ApiService.query("posts", createSearchParams(false));
-	let array = data.results;
-	var csv = "title,owner,abstract,description,org_comment,quantity,create_date,expire_date,tags\r\n";
-	for (var i = 0; i < array.length; i++) {
-		var post = array[i];
-		csv += '"' + escape(post.title) + "\",";
-		csv += '"' + escape(orgas.value.find(e => e.id === post.owner).name) + "\",";
-		csv += '"' + escape(post.abstract) + "\",";
-		csv += '"' + escape(post.description) + "\",";
-		csv += '"' + escape(post.org_comment) + "\",";
-		csv += '"' + (post.quantity ? post.quantity : "") + "\",";
-		csv += '"' + escape(post.create_date) + "\",";
-		csv += '"' + escape(post.expire_date) + "\",";
-		csv += '"';
-		for (var j = 0; j < post.tags.length; j++) {
-			csv += escape(post.tags[j]);
-			csv += ',';
-		}
-		csv += "\",";
-		csv += "\r\n";
-	}
-	var blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
-	var url = URL.createObjectURL(blob);
-	var link = document.createElement("a");
-	link.href = url;
-	link.setAttribute("download", "export.csv");
-	link.click();
-}
+
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>

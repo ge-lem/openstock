@@ -122,7 +122,16 @@
                     Organisations
                   </router-link>
                 </li>
-                <Dropdown :items="orgasAndImport" isNav>
+               <li
+                  v-if="orgas.length <= 1"
+                  class="nav-item"
+                  role="presentation"
+                >
+                  <a class="nav-link" href="#" @click.prevent="newPost()"
+                    >Ajouter une annonce</a
+                  >
+                </li>
+                <Dropdown v-else :items="orgas" isNav>
                   <span class="btn-label">Ajouter une annonce</span>
                 </Dropdown>
               </template>
@@ -237,8 +246,18 @@
                     Organisations
                   </router-link>
                 </li>
+                <li
+                  v-if="orgas.length <= 1"
+                  class="nav-item"
+                  role="presentation"
+                >
+                  <a class="nav-link" href="#" @click.prevent="newPost()"
+                    >Ajouter une annonce</a
+                  >
+                </li>
             <Dropdown
-              :items="orgasAndImport"
+                v-else
+              :items="orgas"
               class="dropdown show active"
               is-nav
               is-black
@@ -345,14 +364,12 @@ function logout() {
   console.log("LOGOUT");
   store.logout();
   orgas.value = [];
-  orgasAndImport.value = [];
   router.push("/");
 }
 
 let orgaStore = null;
 let postStore = null;
 const orgas = ref([]);
-const orgasAndImport = ref([]);
 
 const router = useRouter();
 const route = useRoute();
@@ -386,9 +403,6 @@ async function refreshOrgas() {
       };
       return o;
     });
-   
-   orgasAndImport.value = orgas.value.slice();
-   orgasAndImport.value.push({ label: "Importer plusieurs annonces", to: { name: 'importposts' }});
 }
 async function refreshAuth() {
   if (isAuthenticated.value) {

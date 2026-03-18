@@ -148,7 +148,7 @@ const isOwner = computed(() => {
 
 onBeforeMount(async () => {
   try {
-    post.value = await postStore.getPost(route.params["postid"]);
+    post.value = await postStore.showPost(route.params["postid"]);
     owner.value = await orgaStore.getOrga(post.value.owner);
     loading.value = false;
   } catch (error) {

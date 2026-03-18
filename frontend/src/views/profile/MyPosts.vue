@@ -2,6 +2,18 @@
   <div v-if="!loading" class="card">
     <div class="card-header">
       <h3>Mes annonces</h3>
+      <div class="btn-group float-end">
+        <button
+          class="btn btn-primary"
+          @click.prevent="downloadCSV()"
+        >
+        Exporter
+        </button>
+        <router-link
+          class="btn btn-primary"
+          :to="{ name: 'importposts' }"
+          >Importer</router-link>
+      </div>
     </div>
     <div class="card-body">
       <form class="row row-cols-lg-auto g-3 align-items-center">
@@ -142,9 +154,9 @@ function onPageChange(page) {
   currentPage.value = page;
   refresh();
 }
-
-async function refresh() {
+function createSearchParams(pagination) {
   let paramsDefault = {};
+
   paramsDefault["order"] = dateOrder.value;
   paramsDefault["search"] = searchInput.value;
   
@@ -155,9 +167,14 @@ async function refresh() {
     paramsDefault["status"] = status.value;
   }
 
-  paramsDefault.limit = perPage.value;
-  paramsDefault.offset = (currentPage.value - 1) * perPage.value;
-  await fetchPosts({ ...paramsDefault });
+	if (pagination) {
+	  paramsDefault.limit = perPage.value;
+	  paramsDefault.offset = (currentPage.value - 1) * perPage.value;
+	}
+	return { ...paramsDefault };
+}
+async function refresh() {
+  await fetchPosts(createSearchParams(true));
 }
 
 const statusDict = ref({
@@ -171,8 +188,46 @@ useSearchStorage("myposts", refresh, { search: searchInput, orga, status, dateOr
 
 
 onBeforeMount(async () => {
-  let listOrgas = await fetchOrgas({ userid: authUser.value.id });
+  await fetchOrgas({ userid: authUser.value.id });
   await refresh();
   loading.value = false;
 });
+
+function escape(text) {
+	if (text) {
+		return text.replace("\"", "\\\"");
+	}
+	return "";
+}
+async function downloadCSV() {
+  const params = createSearchParams(false) 
+	const data = await fetchPosts(params);
+	var csv = "#Params : "+JSON.stringify(params)+"\r\n";
+  csv += "title,owner,abstract,description,org_comment,quantity,create_date,expire_date,tags\r\n";
+	for (var i = 0; i < data.length; i++) {
+
+		var post = data[i];
+		csv += '"' + escape(post.title) + "\",";
+		csv += '"' + escape(orgasDict.value[post.owner].name) + "\",";
+		csv += '"' + escape(post.abstract) + "\",";
+		csv += '"' + escape(post.description) + "\",";
+		csv += '"' + escape(post.org_comment) + "\",";
+		csv += '"' + (post.quantity ? post.quantity : "") + "\",";
+		csv += '"' + escape(post.create_date) + "\",";
+		csv += '"' + escape(post.expire_date) + "\",";
+		csv += '"';
+		for (var j = 0; j < post.tags.length; j++) {
+			csv += escape(post.tags[j]);
+			csv += ',';
+		}
+		csv += "\",";
+		csv += "\r\n";
+	}
+	var blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+	var url = URL.createObjectURL(blob);
+	var link = document.createElement("a");
+	link.href = url;
+	link.setAttribute("download", "export.csv");
+	link.click();
+}
 </script>
