@@ -123,3 +123,42 @@ class OrgCommentTests(APITestCase):
         response = self.client.get(url)
         self.client.logout()
         assert self.secretComment not in str(response.content)
+
+class BatchImportTests(APITestCase):
+    def setUp(self):
+        self.userInOrgs = User.objects.create_user(username="user1inOrgs", password="password")
+        self.org1 = OrganizationSerializer().create({'owner': self.userInOrgs, 'name': "org1"})
+        self.org1.managers.add(self.userInOrgs)
+        self.org1.save()
+        self.org2 = OrganizationSerializer().create({'owner': self.userInOrgs, 'name': "org2"})
+        self.org2.managers.add(self.userInOrgs)
+        self.org2.save()
+        self.userNotInOrgs = User.objects.create_user("user3notInOrg", "password")
+    
+    def test_successBatchImport(self):
+        self.client.force_login(self.userInOrgs)
+        self.client.post(reverse("import-list"), ({
+                'owner': self.org1.id,
+                'title': 'importedInOrg1',
+                'tags': []
+            }, {
+                'owner': self.org2.id,
+                'title': 'importedInOrg2',
+                'tags': []
+            }))
+        assert len(Post.objects.all()) == 2
+        self.client.logout()
+
+    def test_unauthorizedBatchImport(self):
+        self.client.force_login(self.userNotInOrgs)
+        self.client.post(reverse("import-list"), ({
+                'owner': self.org1.id,
+                'title': 'importedInOrg1',
+                'tags': []
+            }, {
+                'owner': self.org2.id,
+                'title': 'importedInOrg2',
+                'tags': []
+            }))
+        assert len(Post.objects.all()) == 0
+        self.client.logout()

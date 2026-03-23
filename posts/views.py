@@ -60,10 +60,17 @@ class IsAdminOrIsOwner(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        ismanager = (
-            request.user == obj.owner.owner) or (
-            request.user in obj.owner.managers.all())
-        return request.user.is_staff or ismanager
+        if request.user.is_staff:
+            return True;
+        if isinstance(obj, Organization):
+            org = obj
+        elif isinstance(obj, Post):
+            org = obj.owner
+        elif isinstance(obj, dict):
+            org = obj['owner']
+            if isinstance(org, int):
+                org = Organization.objects.get(pk=org)
+        return isinstance(org, Organization) and (request.user == org.owner or request.user in org.managers.all())
 
 class PostViewSet(mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
@@ -293,15 +300,25 @@ class SearchPostViewSet(mixins.ListModelMixin,
         return Response([x.name for x in Tag.objects.all()],
                         status=status.HTTP_200_OK)
 
-#class ImportPostsViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
-#    nested = PostViewSet()
-#    parser_classes = (MultiPartParser, FormParser, JSONParser,)
-#    
-#    def get_serializer(self, *args, **kwargs):
-#        self.nested.request = self.request
-#        self.nested.format_kwarg = self.format_kwarg
-#        if (self.request.method == "POST" and
-#           isinstance(self.request.data, list) and
-#           not "many" in kwargs):
-#            return self.nested.get_serializer(many=True, *args, **kwargs)
-#        return self.nested.get_serializer(*args, **kwargs)
+class ImportPostsViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
+    nested = PostViewSet()
+    parser_classes = (MultiPartParser, FormParser, JSONParser,)
+    
+    def get_serializer(self, *args, **kwargs):
+        self.nested.request = self.request
+        self.nested.format_kwarg = self.format_kwarg
+        if (self.request.method == "POST" and
+           isinstance(self.request.data, list) and
+           not "many" in kwargs):
+            return self.nested.get_serializer(many=True, *args, **kwargs)
+        return self.nested.get_serializer(*args, **kwargs)
+
+    def perform_create(self, serializer):
+        unallowedCreations = []
+        for post in serializer.data:
+            if not IsAdminOrIsOwner().has_object_permission(self.request, self, post):
+                unallowedCreations.append(post)
+        if len(unallowedCreations) == 0:
+            super().perform_create(serializer)
+        else:
+            self.permission_denied(self.request, "User is not a manager of organization")
