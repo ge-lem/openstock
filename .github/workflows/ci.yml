@@ -24,6 +24,8 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Set test settings
+      run: cp openstock/ci_settings.py openstock/local_settings.py
     - name: Tests
       run: python manage.py test
   build-frontend:
