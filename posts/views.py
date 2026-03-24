@@ -65,6 +65,34 @@ class IsAdminOrIsOwner(permissions.BasePermission):
             request.user in obj.owner.managers.all())
         return request.user.is_staff or ismanager
 
+
+class IsOwnerOrOpen(permissions.BasePermission):
+    """
+    Permission checking if user is admin or if the object belongs
+    to the current user.
+    The object field must be 'user'
+    """
+
+    def has_object_permission(self, request, view, obj):
+        ismanager = (
+            request.user == obj.owner.owner) or (
+            request.user in obj.owner.managers.all())
+        return request.user.is_staff or ismanager or obj.status == Post.OPEN
+    
+class IsOwner(permissions.BasePermission):
+    """
+    Permission checking if user is admin or if the object belongs
+    to an organization for which the current user is owner or manager.
+    The object field must be 'user'
+    """
+
+    def has_object_permission(self, request, view, obj):
+        ismanager = (
+            request.user == obj.owner.owner) or (
+            request.user in obj.owner.managers.all())
+        return request.user.is_staff or ismanager
+
+
 class PostViewSet(mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
@@ -113,7 +141,23 @@ class PostViewSet(mixins.ListModelMixin,
         elif (self.action == 'retrieve'):
             posts = Post.objects.all()
 
+        for post in posts:
+            if not IsOwner().has_object_permission(self.request, self, post):
+                post.org_comment = None
         return posts
+
+    def get_object(self):
+        res = super().get_object()
+        if not IsOwner().has_object_permission(self.request, self, res):
+            res.org_comment = None
+        return res
+
+    def get_permissions(self):
+        if self.action in ['retrieve']:
+            permission_classes = [IsAuthenticated, IsOwnerOrOpen]
+        else:
+            permission_classes = [IsAdminOrIsOwner, IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -235,7 +279,7 @@ class SearchPostViewSet(mixins.ListModelMixin,
     def get_serializer_class(self):
         
         if self.request.user.is_authenticated:
-            return PostSerializer
+            return PostPrivateSerializer
         else:
             return PostPublicSerializer
 
@@ -248,7 +292,7 @@ class SearchPostViewSet(mixins.ListModelMixin,
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
-        posts = Post.objects.filter(status=Post.OPEN)
+        posts = Post.objects
         search = self.request.query_params.get('search', None)
         tags = self.request.query_params.get('tags', None)
         orgaid = self.request.query_params.get('orga', None)
@@ -283,7 +327,11 @@ class SearchPostViewSet(mixins.ListModelMixin,
                 posts = posts.filter(tags__name__in=[t])
 
         posts = posts.distinct()
-        return posts
+        for post in posts:
+            if not IsOwner().has_object_permission(self.request, self, post):
+                post.org_comment = None
+        visibilityCheck = lambda p: IsOwnerOrOpen().has_object_permission(self.request, self, p)
+        return list(filter(visibilityCheck, posts))
 
     @action(methods=['get'], detail=False)
     def tags(self, request):
