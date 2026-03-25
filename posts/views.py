@@ -15,7 +15,7 @@ from rest_framework.parsers import (MultiPartParser,
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError, NotFound
+from rest_framework.exceptions import ValidationError, NotFound, MethodNotAllowed, PermissionDenied
 
 from taggit.models import Tag
 
@@ -65,11 +65,7 @@ class IsAdminOrIsOwner(permissions.BasePermission):
             request.user in obj.owner.managers.all())
         return request.user.is_staff or ismanager
 
-class PostViewSet(mixins.ListModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  viewsets.GenericViewSet):
+class PostViewSet(viewsets.ModelViewSet):
     """
     Endpoint for the post
     """
@@ -79,7 +75,6 @@ class PostViewSet(mixins.ListModelMixin,
     permission_classes = [IsAdminOrIsOwner, IsAuthenticated] 
     
     def get_queryset(self):
-        print(self.__dict__)
         posts = Post.objects.filter(Q(owner__managers__in=[self.request.user]) |
                                     Q(owner__owner=self.request.user))
         if (self.action == 'list'):
@@ -119,6 +114,34 @@ class PostViewSet(mixins.ListModelMixin,
                 posts = posts.filter(tags__name__in=tags.split(","))
 
         return posts
+
+    def create(self, request, *args, **kwargs):
+        # Check if the request contains multiple objects (list)
+        if isinstance(request.data, list):
+            # Allow bulk creation
+            serializer = self.get_serializer(data=request.data, many=True)
+        else:
+            raise MethodNotAllowed(request.method)
+        
+        myownorgas = request.user.myorganizations.values_list("id", flat=True)
+        myorgas = request.user.organizations.values_list("id", flat=True)
+        
+        for post in serializer.initial_data:
+            if(not post['owner'] in myownorgas and not post['owner'] in myorgas):
+                raise PermissionDenied()
+        # Validate the data
+        serializer.is_valid(raise_exception=True)
+
+        # Save the instances
+        self.perform_create(serializer)
+
+        # Create the appropriate response
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        # Override this method to handle any specific actions before saving
+        serializer.save()
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -298,16 +321,3 @@ class SearchPostViewSet(mixins.ListModelMixin,
         """
         return Response([x.name for x in Tag.objects.all()],
                         status=status.HTTP_200_OK)
-
-#class ImportPostsViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
-#    nested = PostViewSet()
-#    parser_classes = (MultiPartParser, FormParser, JSONParser,)
-#    
-#    def get_serializer(self, *args, **kwargs):
-#        self.nested.request = self.request
-#        self.nested.format_kwarg = self.format_kwarg
-#        if (self.request.method == "POST" and
-#           isinstance(self.request.data, list) and
-#           not "many" in kwargs):
-#            return self.nested.get_serializer(many=True, *args, **kwargs)
-#        return self.nested.get_serializer(*args, **kwargs)

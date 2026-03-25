@@ -54,12 +54,12 @@
                 <div class="input-group mb-3">
                   <input
 				    id="expirationColumn"
-                    v-model="post.expire_date"
+                    v-model="csvMapping.expireDate"
                     class="form-control"
                     type="date"
                   />
                   <button
-                    @click.prevent="post.expire_date = null"
+                    @click.prevent="csvMapping.expireDate = null"
                     class="btn btn-outline-secondary"
                     type="button">
                     X
