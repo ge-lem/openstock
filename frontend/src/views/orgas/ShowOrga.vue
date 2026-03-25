@@ -39,7 +39,6 @@ const router = useRouter();
 const orgaStore = useOrgaStore();
 const { getOrga } = orgaStore;
 
-
 onBeforeMount(async () => {
   try {
     orga.value = await getOrga(route.params["orgaid"]);

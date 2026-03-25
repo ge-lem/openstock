@@ -240,21 +240,21 @@
             v-model:showHelp="showHelpMark"
             :description="post.description"
           />
-		  <h5>Commentaire aux membres de l'organisation</h5>
-            <textarea
-              v-model="post.org_comment"
-              rows="5"
-              class="col-12"
-            ></textarea>
-            <a href="#" @click.prevent="showHelpMark = true"
-              >Aide au format Markdown</a
-            >
-            <h6>Aperçu</h6>
-            <markdown
-              v-model:showHelp="showHelpMark"
-              :description="post.org_comment"
-            />
-          <PostFooter/>
+          <h5>Commentaire aux membres de l'organisation</h5>
+          <textarea
+            v-model="post.org_comment"
+            rows="5"
+            class="col-12"
+          ></textarea>
+          <a href="#" @click.prevent="showHelpMark = true"
+            >Aide au format Markdown</a
+          >
+          <h6>Aperçu</h6>
+          <markdown
+            v-model:showHelp="showHelpMark"
+            :description="post.org_comment"
+          />
+          <PostFooter />
         </div>
         <div class="row mt-3">
           <div class="col">
@@ -357,8 +357,8 @@ const statusDict = ref({
 
 const tags = ref([]);
 
-function addTag(option,select){
-  let newtags =  option.value.toLowerCase().replace(' ',',').split(',');
+function addTag(option) {
+  let newtags = option.value.toLowerCase().replace(" ", ",").split(",");
   tags.value.push(...newtags);
   post.value.tags.push(...newtags);
   return false;

@@ -80,26 +80,26 @@
           >
             <ul class="nav navbar-nav">
               <template v-if="!isAuthenticated">
-              <li  class="nav-item">
-                <router-link
-                  active-class="active"
-                  class="nav-link"
-                  exact
-                  :to="{ name: 'home' }"
-                >
-                  {{ title }}
-                </router-link>
-              </li>
-              <li v-if="publicSearch" class="nav-item" role="presentation">
-              <router-link
-                active-class="active"
-                class="nav-link"
-                exact
-                :to="{ name: 'search' }"
-              >
-                Annonces
-              </router-link>
-              </li>
+                <li class="nav-item">
+                  <router-link
+                    active-class="active"
+                    class="nav-link"
+                    exact
+                    :to="{ name: 'home' }"
+                  >
+                    {{ title }}
+                  </router-link>
+                </li>
+                <li v-if="publicSearch" class="nav-item" role="presentation">
+                  <router-link
+                    active-class="active"
+                    class="nav-link"
+                    exact
+                    :to="{ name: 'search' }"
+                  >
+                    Annonces
+                  </router-link>
+                </li>
               </template>
               <template v-else>
                 <li class="nav-item" role="presentation">
@@ -122,7 +122,7 @@
                     Organisations
                   </router-link>
                 </li>
-               <li
+                <li
                   v-if="orgas.length <= 1"
                   class="nav-item"
                   role="presentation"
@@ -161,14 +161,14 @@
               <use href="#burger" />
             </svg>
             <span class="btn-label"> Menu </span>
-            </label>
-            <router-link
+          </label>
+          <router-link
             v-if="!isAuthenticated"
-              active-class="active"
-              class="navbar-toggler collapsed btn btn-primary"
-              exact
-              :to="{ name: 'login' }"
-            >
+            active-class="active"
+            class="navbar-toggler collapsed btn btn-primary"
+            exact
+            :to="{ name: 'login' }"
+          >
             <svg class="svg-icon">
               <use href="#profile" />
             </svg>
@@ -204,67 +204,63 @@
         >
           <ul class="nav navbar-nav">
             <template v-if="!isAuthenticated">
-            <li class="nav-item">
-              <router-link
-                active-class="active"
-                class="nav-link"
-                exact
-                :to="{ name: 'home' }"
-              >
-                {{ title }}
-              </router-link>
-            </li>
-            <li v-if="publicSearch" class="nav-item" role="presentation">
-              <router-link
-                active-class="active"
-                class="nav-link"
-                exact
-                :to="{ name: 'search' }"
-              >
-                Annonces
-              </router-link>
-            </li>
+              <li class="nav-item">
+                <router-link
+                  active-class="active"
+                  class="nav-link"
+                  exact
+                  :to="{ name: 'home' }"
+                >
+                  {{ title }}
+                </router-link>
+              </li>
+              <li v-if="publicSearch" class="nav-item" role="presentation">
+                <router-link
+                  active-class="active"
+                  class="nav-link"
+                  exact
+                  :to="{ name: 'search' }"
+                >
+                  Annonces
+                </router-link>
+              </li>
             </template>
             <template v-else>
-            <li class="nav-item" role="presentation">
-              <router-link
-                active-class="active"
-                class="nav-link"
-                exact
-                :to="{ name: 'search' }"
-              >
-                Annonces
-              </router-link>
+              <li class="nav-item" role="presentation">
+                <router-link
+                  active-class="active"
+                  class="nav-link"
+                  exact
+                  :to="{ name: 'search' }"
+                >
+                  Annonces
+                </router-link>
               </li>
               <li class="nav-item" role="presentation">
-                  <router-link
-                    active-class="active"
-                    class="nav-link"
-                    exact
-                    :to="{ name: 'listorgas' }"
-                  >
-                    Organisations
-                  </router-link>
-                </li>
-                <li
-                  v-if="orgas.length <= 1"
-                  class="nav-item"
-                  role="presentation"
+                <router-link
+                  active-class="active"
+                  class="nav-link"
+                  exact
+                  :to="{ name: 'listorgas' }"
                 >
-                  <a class="nav-link" href="#" @click.prevent="newPost()"
-                    >Ajouter une annonce</a
-                  >
-                </li>
-            <Dropdown
+                  Organisations
+                </router-link>
+              </li>
+              <li v-if="orgas.length <= 1" class="nav-item" role="presentation">
+                <a class="nav-link" href="#" @click.prevent="newPost()"
+                  >Ajouter une annonce</a
+                >
+              </li>
+              <Dropdown
                 v-else
-              :items="orgas"
-              class="dropdown show active"
-              is-nav
-              is-black
-              :absolute="false"
-            >
-              <span class="btn-label">Ajouter une annonce</span>
-            </Dropdown>
+                :items="orgas"
+                class="dropdown show active"
+                is-nav
+                is-black
+                :absolute="false"
+              >
+                <span class="btn-label">Ajouter une annonce</span>
+              </Dropdown>
             </template>
           </ul>
         </div>
@@ -325,7 +321,7 @@
 import { onBeforeMount, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
-import { useRoute } from 'vue-router'
+import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import Dropdown from "@/components/ui/RouteDropdown.vue";
 
@@ -376,14 +372,11 @@ const route = useRoute();
 
 async function newPost(orga) {
   if (!orga) {
-    if(orgas.value.length==1)
-    { 
-      orga=orgas.value[0];
-    }
-    else
-    {
-    router.push({ name: "myorgas", query:{help:true}});
-    return
+    if (orgas.value.length == 1) {
+      orga = orgas.value[0];
+    } else {
+      router.push({ name: "myorgas", query: { help: true } });
+      return;
     }
   }
   const newpost = await postStore.getNewPost({ orga: orga.id });
@@ -394,15 +387,15 @@ async function refreshOrgas() {
   function callNew(v) {
     newPost(v);
   }
-  orgas.value = (
-      await orgaStore.fetchOrgas({ userid: authUser.value.id })
-    ).map((o) => {
+  orgas.value = (await orgaStore.fetchOrgas({ userid: authUser.value.id })).map(
+    (o) => {
       o.label = o.name;
       o.click = () => {
         callNew(o);
       };
       return o;
-    });
+    },
+  );
 }
 async function refreshAuth() {
   if (isAuthenticated.value) {
@@ -420,7 +413,7 @@ watch(isAuthenticated, async () => {
   refreshAuth();
 });
 watch(route, async (r) => {
-  if(r.name=="myorgas") refreshOrgas()
+  if (r.name == "myorgas") refreshOrgas();
 });
 
 onBeforeMount(async () => {

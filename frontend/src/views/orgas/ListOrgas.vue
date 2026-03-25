@@ -22,11 +22,14 @@
                         <div class="d-flex justify-content-between">
                           <h4>
                             <a class="text-decoration-none" :href="href">
-                            {{ o.name}}</a
+                              {{ o.name }}</a
                             >
                           </h4>
                         </div>
-                        <p>Contact : <a :href="'mailto:' + o.contact">Envoyer Email</a></p>
+                        <p>
+                          Contact :
+                          <a :href="'mailto:' + o.contact">{{ o.contact }}</a>
+                        </p>
                       </div>
                     </div>
                   </li>
@@ -41,9 +44,8 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref, computed } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { storeToRefs } from "pinia";
-import useDebouncedRef from "@/helpers/useDebouncedRef";
 
 import { useOrgaStore } from "@/stores/orgas";
 
@@ -54,7 +56,7 @@ const { orgas } = storeToRefs(orgaStore);
 const loading = ref(true);
 
 onBeforeMount(async () => {
-  await fetchOrgas({indiv:false})
+  await fetchOrgas({ indiv: false });
   loading.value = false;
 });
 </script>

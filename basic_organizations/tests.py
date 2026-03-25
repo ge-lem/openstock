@@ -18,27 +18,6 @@ class OrganizationTests(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_individual_readonly(self):
-        User = get_user_model()
-        u = User.objects.create_user("testuser", "test@example.fr","fakepass")
-
-        factory = APIRequestFactory()
-
-        view = OrganizationViewSet.as_view(actions={'get': 'retrieve'})
-        request = factory.get(reverse('orga-detail',args=(u.myorganizations.first().id, 'pk')))
-        force_authenticate(request, user=u)
-        response = view(request, pk=u.myorganizations.first().id)
-        response.render()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        view = OrganizationViewSet.as_view(actions={'patch': 'partial_update'})
-        data = { 'name' : "change name" }
-        request = factory.patch(reverse('orga-detail',args=(u.myorganizations.first().id, 'pk')), data)
-        force_authenticate(request, user=u)
-        response = view(request, pk=u.myorganizations.first().id)
-        response.render()
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
     def test_owner_create(self):
         User = get_user_model()
         u = User.objects.create_user("testuser", "test@example.fr","fakepass")
@@ -145,38 +124,13 @@ class OrganizationTests(APITestCase):
         response = view(request)
         response.render()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIs(response.data['results'][0]['id'],1)
-        self.assertIs(response.data['results'][1]['id'],3)
+        self.assertIs(response.data['results'][0]['id'],o.id)
 
         view = OrganizationViewSet.as_view(actions={'get': 'list'})
-        request = factory.get(reverse('orga-list'),{"userid":9})
+        request = factory.get(reverse('orga-list'),{"userid":au.id})
         force_authenticate(request, user=au)
         response = view(request)
         response.render()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']),0)
 
-    def test_get_indiv(self):
-        User = get_user_model()
-        u = User.objects.create_user("testuser", "test@example.fr","fakepass")
-        au = User.objects.create_user("authuser", "test@example.fr","fakepass")
-        o = Organization(name="supO",contact="con@ex.fr",owner=u)
-        o.save()
-
-        factory = APIRequestFactory()
-
-        view = OrganizationViewSet.as_view(actions={'get': 'list'})
-        request = factory.get(reverse('orga-list'),{"indiv":"true"})
-        force_authenticate(request, user=au)
-        response = view(request)
-        response.render()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']),2)
-
-        view = OrganizationViewSet.as_view(actions={'get': 'list'})
-        request = factory.get(reverse('orga-list'),{"indiv":"false"})
-        force_authenticate(request, user=au)
-        response = view(request)
-        response.render()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']),1)

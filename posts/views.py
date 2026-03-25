@@ -79,6 +79,7 @@ class PostViewSet(mixins.ListModelMixin,
     permission_classes = [IsAdminOrIsOwner, IsAuthenticated] 
     
     def get_queryset(self):
+        print(self.__dict__)
         posts = Post.objects.filter(Q(owner__managers__in=[self.request.user]) |
                                     Q(owner__owner=self.request.user))
         if (self.action == 'list'):
@@ -87,7 +88,13 @@ class PostViewSet(mixins.ListModelMixin,
             status = self.request.query_params.get('status', None)
             orgaid = self.request.query_params.get('orga', None)
             order = self.request.query_params.get('order', 'e')
+            typePost = self.request.query_params.get('type', 'b')
 
+            if (typePost == "r"):
+                posts = posts.filter(is_request=True)
+            elif (typePost == "p"):
+                posts = posts.filter(is_request=False)
+            
             if (order == "-c"):
                 posts = posts.order_by('create_date')
             elif (order == "c"):
@@ -110,8 +117,6 @@ class PostViewSet(mixins.ListModelMixin,
                 posts = posts.filter(status=status)
             if tags is not None:
                 posts = posts.filter(tags__name__in=tags.split(","))
-        elif (self.action == 'retrieve'):
-            posts = Post.objects.all()
 
         return posts
 
@@ -249,40 +254,41 @@ class SearchPostViewSet(mixins.ListModelMixin,
 
     def get_queryset(self):
         posts = Post.objects.filter(status=Post.OPEN)
-        search = self.request.query_params.get('search', None)
-        tags = self.request.query_params.get('tags', None)
-        orgaid = self.request.query_params.get('orga', None)
-        order = self.request.query_params.get('order', 'e')
-        typePost = self.request.query_params.get('type', 'b')
+        if (self.action == 'list'):
+            search = self.request.query_params.get('search', None)
+            tags = self.request.query_params.get('tags', None)
+            orgaid = self.request.query_params.get('orga', None)
+            order = self.request.query_params.get('order', 'e')
+            typePost = self.request.query_params.get('type', 'b')
 
-        if (order == "-c"):
-            posts = posts.order_by('create_date')
-        elif (order == "c"):
-            posts = posts.order_by('-create_date')
-        else:
-            posts = posts.order_by('expire_date', '-create_date')
+            if (order == "-c"):
+                posts = posts.order_by('create_date')
+            elif (order == "c"):
+                posts = posts.order_by('-create_date')
+            else:
+                posts = posts.order_by('expire_date', '-create_date')
 
-        if (typePost == "r"):
-            posts = posts.filter(is_request=True)
-        elif (typePost == "p"):
-            posts = posts.filter(is_request=False)
+            if (typePost == "r"):
+                posts = posts.filter(is_request=True)
+            elif (typePost == "p"):
+                posts = posts.filter(is_request=False)
 
-        if orgaid is not None:
-            try:
-                orga = Organization.objects.get(pk=orgaid)
-                posts = posts.filter(owner=orga)
-            except Organization.DoesNotExist:
-                posts = posts.none()
+            if orgaid is not None:
+                try:
+                    orga = Organization.objects.get(pk=orgaid)
+                    posts = posts.filter(owner=orga)
+                except Organization.DoesNotExist:
+                    posts = posts.none()
 
-        if search is not None:
-            searchQ = (Q(title__icontains=search) |
-                       Q(description__icontains=search))
-            posts = posts.filter(searchQ)
-        if tags is not None:
-            for t in tags.split(","):
-                posts = posts.filter(tags__name__in=[t])
+            if search is not None:
+                searchQ = (Q(title__icontains=search) |
+                           Q(description__icontains=search))
+                posts = posts.filter(searchQ)
+            if tags is not None:
+                for t in tags.split(","):
+                    posts = posts.filter(tags__name__in=[t])
 
-        posts = posts.distinct()
+            posts = posts.distinct()
         return posts
 
     @action(methods=['get'], detail=False)

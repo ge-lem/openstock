@@ -11,7 +11,7 @@ export const usePostStore = defineStore("posts", () => {
     const { data } = await ApiService.query("posts", params);
     posts.value = data.results;
     totalCount.value = data.count;
-    return posts.value;
+    return { posts, totalCount };
   }
   async function createPosts(params) {
     const { data } = await ApiService.post("posts/import", params);

@@ -111,7 +111,7 @@
                 <tr v-for="invit in invits" :key="invit.id">
                   <td>{{ invit.email }}</td>
                   <td>{{ invit.sent }}</td>
-                  <td>{{ invit.accepted ? "Oui":"Non"}}</td>
+                  <td>{{ invit.accepted ? "Oui" : "Non" }}</td>
                 </tr>
               </tbody>
             </table>
@@ -138,7 +138,7 @@ const tempValue = reactive({ first_name: "testsss", last_name: "", email: "" });
 const invits = ref([]);
 
 onBeforeMount(async () => {
-  invits.value = (await authStore.listInvits())
+  invits.value = await authStore.listInvits();
   tempValue.first_name = authUser.value.first_name;
   tempValue.last_name = authUser.value.last_name;
   tempValue.email = authUser.value.email;

@@ -33,7 +33,7 @@
                 <tr>
                   <td scope="row">Contact</td>
                   <td>
-                    <a :href="'mailto:' + owner.contact">Envoyer Email</a>
+                    <a :href="'mailto:' + owner.contact">{{ owner.contact }}</a>
                   </td>
                 </tr>
                 <tr v-if="post.expire_date">
@@ -69,17 +69,17 @@
           </div>
           <p>{{ post.abstract }}</p>
           <markdown :description="post.description" />
-		  <div v-if="post.org_comment">
-			<h5>Commentaire aux membres de l'organisation:</h5>
-			<markdown :description="post.org_comment" />
-		  </div>
-          <PostFooter/>
+          <div v-if="canManage">
+            <h5>Commentaire aux membres de l'organisation:</h5>
+            <markdown :description="post.org_comment" />
+          </div>
+          <PostFooter />
         </div>
       </div>
       <div class="row">
         <div class="col">
           <router-link
-            v-if="isOwner"
+            v-if="canManage"
             class="btn btn-primary float-end"
             :to="{ name: 'editpost', params: { postid: post.id } }"
           >
@@ -115,10 +115,8 @@
 
 <script setup>
 import { onBeforeMount, ref, computed } from "vue";
-import { storeToRefs } from "pinia";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
-import { useAuthStore } from "@/stores/auth";
 import { useOrgaStore } from "@/stores/orgas";
 import { usePostStore } from "@/stores/posts";
 
@@ -126,12 +124,14 @@ import Markdown from "@/components/ui/MarkdownComponent.vue";
 import Modal from "@/plugins/modal";
 import PostFooter from "@/views/PostFooter.vue";
 
-const { authUser } = storeToRefs(useAuthStore());
 const orgaStore = useOrgaStore();
 
 const postStore = usePostStore();
 
 const route = useRoute();
+const router = useRouter();
+
+const canManage = computed(() => route.name == "post");
 
 const post = ref(null);
 const owner = ref(null);
@@ -139,21 +139,16 @@ const loading = ref(true);
 
 const isShowPhotos = ref(false);
 
-const isOwner = computed(() => {
-  return (
-    owner.value.owner == authUser.value.id ||
-    owner.value.managers.indexOf(authUser.value.id) != -1
-  );
-});
-
 onBeforeMount(async () => {
   try {
-    post.value = await postStore.showPost(route.params["postid"]);
+    if (canManage.value)
+      post.value = await postStore.getPost(route.params["postid"]);
+    else post.value = await postStore.showPost(route.params["postid"]);
     owner.value = await orgaStore.getOrga(post.value.owner);
     loading.value = false;
   } catch (error) {
     console.log(error);
-    //router.push({ name: "home" });
+    router.push({ name: "home" });
   }
 });
 </script>

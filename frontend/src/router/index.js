@@ -77,7 +77,7 @@ const router = createRouter({
     {
       path: "/myposts",
       name: "myposts",
-      component: () => import("../views/profile/MyPosts.vue"),
+      component: () => import("../views/SearchPost.vue"),
       meta: { requiresAuth: true },
     },
     {
@@ -87,8 +87,14 @@ const router = createRouter({
       meta: { requiresAuth: !import.meta.env.VITE_PUBLIC_SEARCH },
     },
     {
-      path: "/post/:postid",
+      path: "/showpost/:postid/",
       name: "showpost",
+      component: () => import("../views/ShowPost.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/post/:postid/",
+      name: "post",
       component: () => import("../views/ShowPost.vue"),
       meta: { requiresAuth: true },
     },

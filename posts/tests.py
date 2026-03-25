@@ -37,7 +37,7 @@ class DraftVisibilityTests(APITestCase):
         )
 
     def test_searchShowDraftToOrgMembers(self):
-        url = reverse("searchpost-list")
+        url = reverse("post-list")
         response = self.client.get(url)
         assert self.specificDraftContent not in str(response.content)
         self.client.force_login(self.user1InOrg)
@@ -92,23 +92,6 @@ class OrgCommentTests(APITestCase):
 
     def test_OrgCommentsVisiblePostsList(self):
         url = reverse("post-list")
-        response = self.client.get(url)
-        assert self.secretComment not in str(response.content)
-        self.client.force_login(self.user1InOrg)
-        response = self.client.get(url)
-        self.client.logout()
-        assert self.secretComment in str(response.content)
-        self.client.force_login(self.user2InOrg)
-        response = self.client.get(url)
-        self.client.logout()
-        assert self.secretComment in str(response.content)
-        self.client.force_login(self.user3NotInOrg)
-        response = self.client.get(url)
-        self.client.logout()
-        assert self.secretComment not in str(response.content)
-
-    def test_OrgCommentsVisiblePostsSearch(self):
-        url = reverse("searchpost-list")
         response = self.client.get(url)
         assert self.secretComment not in str(response.content)
         self.client.force_login(self.user1InOrg)
