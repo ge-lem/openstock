@@ -32,6 +32,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Prepare
+      run: 	|
+        chmod +x init.sh
+        ./init.sh
     - uses: actions/setup-node@v4
     - run: npm ci
       working-directory: ./frontend
