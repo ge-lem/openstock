@@ -284,6 +284,12 @@ onBeforeMount(async () => {
   loading.value = false;
 });
 
+function escapeQuote(text) {
+	if (text) {
+		return text.replace("\"", "\\\"");
+	}
+	return "";
+}
 async function downloadCSV() {
   const params = createSearchParams(false);
   const { posts } = atMyPosts.value
@@ -298,20 +304,20 @@ async function downloadCSV() {
       "title,owner,abstract,description,quantity,create_date,expire_date,tags\r\n";
   for (var i = 0; i < posts.value.length; i++) {
     var post = posts.value[i];
-    csv += '"' + escape(post.title) + '",';
-    csv += '"' + escape(orgasDict.value[post.owner].name) + '",';
+    csv += '"' + escapeQuote(post.title) + '",';
+    csv += '"' + escapeQuote(orgasDict.value[post.owner].name) + '",';
     if (atMyPosts.value) {
-      csv += '"' + escape(post.status) + '",';
-      csv += '"' + escape(post.org_comment) + '",';
+      csv += '"' + post.status + '",';
+      csv += '"' + escapeQuote(post.org_comment) + '",';
     }
-    csv += '"' + escape(post.abstract) + '",';
-    csv += '"' + escape(post.description) + '",';
+    csv += '"' + escapeQuote(post.abstract) + '",';
+    csv += '"' + escapeQuote(post.description) + '",';
     csv += '"' + (post.quantity ? post.quantity : "") + '",';
-    csv += '"' + escape(post.create_date) + '",';
-    csv += '"' + escape(post.expire_date) + '",';
+    csv += '"' + escapeQuote(post.create_date) + '",';
+    csv += '"' + escapeQuote(post.expire_date) + '",';
     csv += '"';
     for (var j = 0; j < post.tags.length; j++) {
-      csv += escape(post.tags[j]);
+      csv += escapeQuote(post.tags[j]);
       csv += ",";
     }
     csv += '",';
