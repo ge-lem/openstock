@@ -1,0 +1,2 @@
+CAS_AUTH = False
+PUBLIC_SEARCH = False

@@ -1,0 +1,43 @@
+name: OpenStock
+
+on:
+  push:
+    branches: [ '**' ]
+  pull_request:
+    branches: [ '**' ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-backend:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install system deps for LDAP
+      run: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Set test settings
+      run: cp openstock/ci_settings.py openstock/local_settings.py
+    - name: Tests
+      run: python manage.py test
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Prepare
+      run: 	|
+        chmod +x init.sh
+        ./init.sh
+    - uses: actions/setup-node@v4
+    - run: npm ci
+      working-directory: ./frontend
+    - run: npm run build --if-present
+      working-directory: ./frontend
