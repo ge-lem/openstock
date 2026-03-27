@@ -107,13 +107,13 @@ class PostViewSet(viewsets.ModelViewSet):
             if search is not None:
                 searchQ = (Q(title__icontains=search) |
                            Q(description__icontains=search))
-                posts = posts.filter(searchQ).distinct()
+                posts = posts.filter(searchQ)
             if status is not None:
                 posts = posts.filter(status=status)
             if tags is not None:
                 posts = posts.filter(tags__name__in=tags.split(","))
 
-        return posts
+        return posts.distinct()
 
     def create(self, request, *args, **kwargs):
         # Check if the request contains multiple objects (list)
