@@ -308,6 +308,10 @@
           Vous devez compléter et publier (ou supprimier) l'annonce brouillon
           afin d'en créer une nouvelle.
         </p>
+		<p>
+		  Il est aussi possible d'<a href="importposts">importer plusieurs annonces depuis un fichier de
+		  tableur</a>.
+		</p>
       </div>
     </modal>
   </div>
