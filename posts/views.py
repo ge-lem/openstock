@@ -32,7 +32,7 @@ def compress_image(photo):
 
             image_temporary = Image.open(photo)
             output_io_stream = BytesIO()
-            image_temporary.thumbnail((1250, 1250), Image.ANTIALIAS)
+            image_temporary.thumbnail((1250, 1250), Image.LANCZOS)
             rgba_image = image_temporary.convert('RGBA')
             background = Image.new("RGB", rgba_image.size, (255, 255, 255))
             background.paste(rgba_image, mask = rgba_image.split()[3])
